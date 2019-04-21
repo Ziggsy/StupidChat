@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/userImage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:srcCompat="@android:drawable/sym_def_app_icon" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/userImage"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="48dp"
+        android:textSize="16sp"
+        android:textColor="@color/textMainColor"
+        android:singleLine="true"
+        tools:text="Мустафа Ибрагиммммммммммммммммммммм"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/userLastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/userImage"
+        android:layout_below="@id/userName"
+        android:layout_marginTop="6dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="48dp"
+        android:textSize="14sp"
+        android:textColor="@color/textReadMessageColor"
+        android:singleLine="true"
+        tools:text="Мустафа: Я бы не был так уверен в себе. Знай"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/readTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:textSize="14sp"
+        android:textColor="@color/textReadMessageColor"
+        android:singleLine="true"
+        tools:text="00:00"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/status"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_below="@id/readTime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+</RelativeLayout>

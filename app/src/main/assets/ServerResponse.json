@@ -1,0 +1,52 @@
+{
+  "chats": [
+    {
+      "id": "test-chat-001",
+      "updated": 1555286600,
+      "created": 1555286500,
+      "unread": true,
+      "with_user": {
+        "id": "test-user-001",
+        "name": "Alan Perkins",
+        "settings": {
+          "work": "CEO @ The LEGO Group"
+        },
+        "avatar": {
+          "url": "https://randomuser.me/api/portraits/lego/2.jpg"
+        }
+      }
+    },
+    {
+      "id": "test-chat-002",
+      "updated": 1555286700,
+      "created": 1555286600,
+      "unread": false,
+      "with_user": {
+        "id": "test-user-002",
+        "name": "Mathew Mendoza",
+        "settings": {
+          "work": "CMO @ The LEGO Group"
+        },
+        "avatar": {
+          "url": "https://randomuser.me/api/portraits/lego/6.jpg"
+        }
+      }
+    },
+    {
+      "id": "test-chat-003",
+      "updated": 1555286800,
+      "created": 1555286700,
+      "unread": true,
+      "with_user": {
+        "id": "test-user-003",
+        "name": "Austin Miller",
+        "settings": {
+          "work": "CTO @ The LEGO Group"
+        },
+        "avatar": {
+          "url": "https://randomuser.me/api/portraits/lego/7.jpg"
+        }
+      }
+    }
+  ]
+}
