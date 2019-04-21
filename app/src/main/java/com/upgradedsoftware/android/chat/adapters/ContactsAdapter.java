@@ -21,7 +21,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private List<ChatsUiModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
-//    private HashMap<String, Bitmap> imageHashMap;
 
     public ContactsAdapter(Context context, List<ChatsUiModel> data) {
         this.mInflater = LayoutInflater.from(context);
@@ -58,10 +57,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         if(DataHolder.getInstance().imageMap != null) if(DataHolder.getInstance().imageMap.containsKey(data.getUser().getUserId()))
             holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
     }
-
-//    public void updateImageLibrary(HashMap<String, Bitmap> imageHashMap) {
-//        this.imageHashMap = imageHashMap;
-//    }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

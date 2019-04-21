@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.upgradedsoftware.android.chat.R;
@@ -68,6 +69,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                 Glide.with(this)
                         .asBitmap()
                         .load(data.get(i).getUser().getUserAvatars().getUrl())
+                        .apply(RequestOptions.circleCropTransform())
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
