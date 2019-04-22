@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
@@ -27,9 +28,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public ContactsAdapter(Context context, List<ChatsUiModel> data) {
+    public ContactsAdapter(Context context, List<ChatsUiModel> data, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
+        this.mClickListener = listener;
     }
 
     ChatsUiModel getItem(int id) {
@@ -58,15 +60,19 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         if(data.getUnread()) {
             holder.unreadStatus.setVisibility(View.VISIBLE);
+            holder.subText.setVisibility(View.VISIBLE);
             holder.subText.setText(R.string.default_unread);
             holder.subText.setTextColor(Color.parseColor("#FF57A5A0"));
         }
         else {
             holder.unreadStatus.setVisibility(View.INVISIBLE);
+            holder.subText.setVisibility(View.INVISIBLE);
         }
 
-        if(DataHolder.getInstance().imageMap != null) if(DataHolder.getInstance().imageMap.containsKey(data.getUser().getUserId()))
-            holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
+        if(DataHolder.getInstance().imageMap != null)
+            if(DataHolder.getInstance().imageMap.containsKey(data.getUser().getUserId())) {
+                holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
+            }
 
         holder.lastMessageTime.setText(formatTimeSimple(data.getUpdated()));
     }

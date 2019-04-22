@@ -15,6 +15,8 @@ public class Helper {
         return ourInstance;
     }
 
+    public static final String URL_MY_AVATAR = "https://pp.userapi.com/c852224/v852224410/fbe3b/3B4yGYVmwuM.jpg";
+
     public static final String JSON_SERVER_RESPONSE = "ServerResponse.json";
     public static final String JSON_NEW_CHATTERS = "NewChat";
 

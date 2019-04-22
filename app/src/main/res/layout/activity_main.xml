@@ -22,6 +22,31 @@
             app:fontFamily="@font/roboto_bold"
             android:textColor="@color/colorAccent"/>
 
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="16dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            app:srcCompat="@drawable/ic_baseline_menu"/>
+
+        <ImageView
+            android:id="@+id/devMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            app:srcCompat="@drawable/ic_baseline_developer_mode"/>
+
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

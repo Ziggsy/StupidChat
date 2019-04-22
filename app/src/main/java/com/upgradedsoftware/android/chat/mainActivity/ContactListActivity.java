@@ -1,12 +1,17 @@
 package com.upgradedsoftware.android.chat.mainActivity;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -24,7 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
-import static java.security.AccessController.getContext;
+import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
 
 interface ContactListInterface {
     void newDataReceived(List<ChatsUiModel> data);
@@ -72,8 +77,15 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private void initRecycler(List<ChatsUiModel> data) {
         RecyclerView recyclerView = findViewById(R.id.recyclerContacts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ContactsAdapter(this, data);
 //        adapter.setClickListener(this);
+        ContactsAdapter.ItemClickListener listener = new ContactsAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d("as", "CLICKED");
+            }
+        };
+
+        adapter = new ContactsAdapter(this, data, listener);
         recyclerView.setAdapter(adapter);
         first_setup = false;
     }
