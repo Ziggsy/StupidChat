@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -15,20 +17,21 @@ import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 import com.upgradedsoftware.android.chat.models.ChatsUiModel;
 import com.upgradedsoftware.android.chat.task.FakeSerer;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.utils.ExampleBottomSheetDialog;
+import com.upgradedsoftware.android.chat.utils.Helper;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
+import static java.security.AccessController.getContext;
+
 interface ContactListInterface {
     void newDataReceived(List<ChatsUiModel> data);
+    ContactsAdapter getAdapter();
 }
 
-public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
+public class ContactListActivity extends AppCompatActivity implements ContactListInterface, ExampleBottomSheetDialog.BottomSheetListener {
 
     ContactsAdapter adapter;
     private boolean first_setup = true;
@@ -37,15 +40,33 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DataHolder.getInstance().imageMap = new HashMap<>();
         initChatList();
+        initFakeServer();
+        initBottomSheet();
     }
 
     private void initChatList() {
+        DataHolder.getInstance().imageMap = new HashMap<>();
+        DataHolder.getInstance().mJSONObject = Helper.getInstance().initJSON(this, JSON_SERVER_RESPONSE);
+    }
+
+    private void initFakeServer() {
         FakeSerer server = new FakeSerer();
-        DataHolder.getInstance().mJSONObject = initJSON();
         server.setActivity(this);
         server.execute(DataHolder.getInstance().mJSONObject);
+    }
+
+    private void initBottomSheet() {
+        RelativeLayout header = findViewById(R.id.header);
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ExampleBottomSheetDialog bottomSheet = new ExampleBottomSheetDialog();
+                bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+            }
+        });
+
+
     }
 
     private void initRecycler(List<ChatsUiModel> data) {
@@ -65,20 +86,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
         for (int i = 0; i < DataHolder.getInstance().mChatsUiModel.size(); i++) {
             if (!DataHolder.getInstance().imageMap.containsKey(listChatModel.get(i).getUser().getUserId())) {
-                final String key = listChatModel.get(i).getUser().getUserId();
-                Glide.with(this)
-                        .asBitmap()
-                        .load(data.get(i).getUser().getUserAvatars().getUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                                DataHolder.getInstance().imageMap.put(key, resource);
-                            }
-                        });
+                downloadImage(data, listChatModel, i);
             }
         }
-
 
         if (first_setup) {
             initRecycler(data);
@@ -86,24 +96,30 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             adapter.setNewData(data);
             adapter.notifyDataSetChanged();
         }
-
-
     }
 
-    private JSONObject initJSON() {
-        try {
-            InputStream is = getAssets().open("ServerResponse.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            return new JSONObject(new String(buffer, "UTF-8"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
+    @Override
+    public ContactsAdapter getAdapter() {
+        return adapter;
     }
 
+    private void downloadImage(List<ChatsUiModel> data, List<ChatsUiModel> listChatModel, int i) {
+        final String key = listChatModel.get(i).getUser().getUserId();
+        Glide.with(this)
+                .asBitmap()
+                .load(data.get(i).getUser().getUserAvatars().getUrl())
+                .apply(RequestOptions.circleCropTransform())
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        DataHolder.getInstance().imageMap.put(key, resource);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+    }
+
+    @Override
+    public void onButtonClicked(String text) {
+
+    }
 }

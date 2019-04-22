@@ -11,21 +11,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CREATED;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UPDATED;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_WITH_USER;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_SETTING_WORK;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_AVATAR;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_NAME;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
+
 
 public class ChatListMapper {
 
-    public static String KEY_CHAT_CHATS = "chats";
-    public static String KEY_CHAT_ID = "id";
-    public static String KEY_CHAT_UPDATED = "updated";
-    public static String KEY_CHAT_CREATED = "created";
-    public static String KEY_CHAT_UNREAD = "unread";
-    public static String KEY_CHAT_WITH_USER = "with_user";
-    public static String KEY_USER_ID = "id";
-    public static String KEY_USER_NAME = "name";
-    public static String KEY_USER_SETTINGS = "settings";
-    public static String KEY_USER_AVATAR = "avatar";
-    public static String KEY_SETTING_WORK = "work";
-    public static String KEY_AVATAR_URL = "url";
 
     public ArrayList<ChatsUiModel> mapToUI(JSONObject response) throws JSONException {
         ArrayList<ChatsUiModel> list = new ArrayList<>();

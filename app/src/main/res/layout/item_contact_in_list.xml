@@ -14,7 +14,7 @@
         android:id="@+id/userImage"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        app:srcCompat="@mipmap/ic_launcher_round" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/userName"
@@ -59,6 +59,6 @@
         android:layout_below="@id/readTime"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@drawable/ic_round_fiber_manual_record" />
 
 </RelativeLayout>

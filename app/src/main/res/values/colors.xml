@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F1E4FF</color>
-    <color name="colorPrimaryDark">#F1E4FF</color>
-    <color name="colorAccent">#F1E4FF</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#000000</color>
 
     <color name="textMainColor">#000000</color>
     <color name="textReadMessageColor">#868686</color>
+    <color name="newMessage">#4D918A</color>
 </resources>
