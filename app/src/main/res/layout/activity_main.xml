@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".mainActivity.ContactListActivity">
+    tools:context=".ContactList.ContactListActivity">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -32,7 +32,7 @@
             android:paddingLeft="10dp"
             android:paddingBottom="8dp"
             android:paddingTop="8dp"
-            app:srcCompat="@drawable/ic_baseline_menu"/>
+            app:srcCompat="@drawable/ic_baseline_person"/>
 
         <ImageView
             android:id="@+id/devMode"
@@ -45,6 +45,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_baseline_developer_mode"/>
 
     </RelativeLayout>

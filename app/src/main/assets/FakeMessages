@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "id": "test-message-004",
+      "from_me": true,
+      "text": "test-message-004",
+      "created": 1555701396
+    },
+    {
+      "id": "test-message-005",
+      "from_me": false,
+      "text": "test-message-005",
+      "created": 1555701396
+    },
+    {
+      "id": "test-message-006",
+      "from_me": true,
+      "text": "test-message-006",
+      "created": 1555701396
+    }
+  ]
+}

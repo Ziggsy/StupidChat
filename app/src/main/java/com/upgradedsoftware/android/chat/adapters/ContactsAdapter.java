@@ -1,44 +1,40 @@
 package com.upgradedsoftware.android.chat.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
-import com.upgradedsoftware.android.chat.models.ChatsUiModel;
+import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
 
-    private List<ChatsUiModel> mData;
+    private List<ContactUiModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public ContactsAdapter(Context context, List<ChatsUiModel> data, ItemClickListener listener) {
+    public ContactsAdapter(Context context, List<ContactUiModel> data, ItemClickListener listener) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.mClickListener = listener;
     }
 
-    ChatsUiModel getItem(int id) {
+    ContactUiModel getItem(int id) {
         return mData.get(id);
     }
 
-    public void setNewData(List<ChatsUiModel> data){
+    public void setNewData(List<ContactUiModel> data){
         this.mData = data;
     }
 
@@ -55,7 +51,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ChatsUiModel data = mData.get(position);
+        ContactUiModel data = mData.get(position);
         holder.userName.setText(data.getUser().getName());
 
         if(data.getUnread()) {
@@ -66,7 +62,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         }
         else {
             holder.unreadStatus.setVisibility(View.INVISIBLE);
-            holder.subText.setVisibility(View.INVISIBLE);
+            holder.subText.setText(R.string.default_read);
+            holder.subText.setVisibility(View.VISIBLE);
         }
 
         if(DataHolder.getInstance().imageMap != null)
@@ -94,19 +91,22 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             subText = itemView.findViewById(R.id.userLastMessage);
 
             itemView.setOnClickListener(this);
+            userAvatar.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
 
-    }
 
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
     }
 
     public interface ItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    public interface AvatarClickListener {
         void onItemClick(View view, int position);
     }
 

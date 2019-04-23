@@ -18,7 +18,15 @@ public class Helper {
     public static final String URL_MY_AVATAR = "https://pp.userapi.com/c852224/v852224410/fbe3b/3B4yGYVmwuM.jpg";
 
     public static final String JSON_SERVER_RESPONSE = "ServerResponse.json";
+    public static final String JSON_CHAT_MESSAGES = "ChatMessages";
     public static final String JSON_NEW_CHATTERS = "NewChat";
+    public static final String JSON_NEW_MESSAGES = "FakeMessages";
+
+    public static final String KEY_MESSAGE_MESSAGES = "messages";
+    public static final String KEY_MESSAGE_ID = "id";
+    public static final String KEY_MESSAGE_FROM_ME = "from_me";
+    public static final String KEY_MESSAGE_TEXT = "text";
+    public static final String KEY_MESSAGE_CREATED = "created";
 
     public static final String KEY_CHAT_CHATS = "chats";
     public static final String KEY_CHAT_ID = "id";

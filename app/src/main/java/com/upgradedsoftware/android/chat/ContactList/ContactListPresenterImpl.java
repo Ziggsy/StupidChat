@@ -1,4 +1,4 @@
-package com.upgradedsoftware.android.chat.mainActivity;
+package com.upgradedsoftware.android.chat.ContactList;
 
 import com.upgradedsoftware.android.chat.mappers.ChatListMapper;
 

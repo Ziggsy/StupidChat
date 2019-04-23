@@ -1,6 +1,6 @@
 package com.upgradedsoftware.android.chat.mappers;
 
-import com.upgradedsoftware.android.chat.models.ChatsUiModel;
+import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.models.UserAvatars;
 import com.upgradedsoftware.android.chat.models.UserModel;
 import com.upgradedsoftware.android.chat.models.UserSettings;
@@ -28,14 +28,14 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 public class ChatListMapper {
 
 
-    public ArrayList<ChatsUiModel> mapToUI(JSONObject response) throws JSONException {
-        ArrayList<ChatsUiModel> list = new ArrayList<>();
+    public ArrayList<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
+        ArrayList<ContactUiModel> list = new ArrayList<>();
 
         JSONArray chatsArray = response.getJSONArray(KEY_CHAT_CHATS);
 
         for (int i = 0; i < chatsArray.length(); i++) {
             JSONObject jsonElement = chatsArray.getJSONObject(i);
-            ChatsUiModel element = new ChatsUiModel(
+            ContactUiModel element = new ContactUiModel(
                     jsonElement.getString(KEY_CHAT_ID),
                     jsonElement.getLong(KEY_CHAT_UPDATED),
                     jsonElement.getLong(KEY_CHAT_CREATED),

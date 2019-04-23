@@ -1,0 +1,22 @@
+{
+  "messages": [
+    {
+      "id": "test-message-001",
+      "from_me": true,
+      "text": "Hi there",
+      "created": 1555700196
+    },
+    {
+      "id": "test-message-002",
+      "from_me": false,
+      "text": "Hey, what's up?",
+      "created": 1555700296
+    },
+    {
+      "id": "test-message-003",
+      "from_me": true,
+      "text": "Wanna grab a beer?",
+      "created": 1555700396
+    }
+  ]
+}
