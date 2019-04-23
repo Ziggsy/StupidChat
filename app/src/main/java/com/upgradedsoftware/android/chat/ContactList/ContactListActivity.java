@@ -68,8 +68,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                 bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
             }
         });
-
-
     }
 
     private void initRecycler(List<ContactUiModel> data) {
@@ -81,7 +79,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
                 ContactListActivity.this.startActivity(intent);
-                Log.d("as", "CLICKED");
             }
         };
 

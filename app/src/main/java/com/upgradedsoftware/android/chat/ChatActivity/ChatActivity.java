@@ -1,8 +1,11 @@
 package com.upgradedsoftware.android.chat.ChatActivity;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.task.FakeChatRequest;
@@ -17,6 +20,17 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         initMessageList();
         initFakeRequests();
+        initClickListener();
+    }
+
+    private void initClickListener() {
+        ImageView image = findViewById(R.id.arrowBack);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     private void initMessageList() {
