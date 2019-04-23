@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
@@ -36,6 +37,15 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         initMessageList();
         initFakeRequests();
         initClickListener();
+        initUI();
+    }
+
+    private void initUI(){
+        Bundle bundle = getIntent().getExtras();
+        TextView view = findViewById(R.id.userName);
+        view.setText(bundle.getString("name"));
+        ImageView imageView = findViewById(R.id.userAvatar);
+        imageView.setImageBitmap(DataHolder.getInstance().imageMap.get(bundle.getString("key")));
     }
 
     private void initClickListener() {

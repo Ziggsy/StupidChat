@@ -31,6 +31,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         this.mClickListener = listener;
     }
 
+    public List<ContactUiModel> getData(){
+        return mData;
+    }
+
     public void setNewData(List<ContactUiModel> data){
         this.mData = data;
     }

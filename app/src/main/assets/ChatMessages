@@ -40,13 +40,13 @@
     {
       "id": "test-message-007",
       "from_me": true,
-      "text": "23:00 it is ok?",
+      "text": "23:00 is it ok?",
       "created": 1555700796
     },
     {
       "id": "test-message-008",
       "from_me": false,
-      "text": "OK. Let'do it",
+      "text": "OK. Let's do it",
       "created": 1555700896
     },
     {

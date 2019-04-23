@@ -48,6 +48,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         initBottomSheet();
     }
 
+
     private void initChatList() {
         DataHolder.getInstance().imageMap = new HashMap<>();
         DataHolder.getInstance().mJSONObjectContact = Helper.getInstance().initJSON(this, JSON_SERVER_RESPONSE);
@@ -78,6 +79,8 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
+                intent.putExtra("key",adapter.getData().get(position).getUser().getUserId());
+                intent.putExtra("name",adapter.getData().get(position).getUser().getName());
                 ContactListActivity.this.startActivity(intent);
             }
         };
