@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import com.upgradedsoftware.android.chat.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.ContactList.ContactListActivity;
 import com.upgradedsoftware.android.chat.mappers.ChatListMapper;
+import com.upgradedsoftware.android.chat.mappers.MessageMapper;
+import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
@@ -29,7 +31,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     protected Void doInBackground(JSONObject... data) {
         try {
             for (int i = 0; i < 9999; i++) {
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(5);
                 JSONObject newData = randomEvent(data[0]);
                 publishProgress(newData);
             }
@@ -62,28 +64,29 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     }
 
     public void onReceive(JSONObject json) {
-        ChatListMapper mapper = new ChatListMapper();
+        MessageMapper mapper = new MessageMapper();
+
         try {
-            ArrayList<ContactUiModel> object = mapper.mapToUI(json);
-//            mActivity.newDataReceived(object);
+            ArrayList<ChatUiModel> object = mapper.mapToUI(json);
+            mActivity.newDataReceived(object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    public void setActivity(ChatActivity contactListActivity) {
-        this.mActivity = contactListActivity;
+    public void setActivity(ChatActivity activity) {
+        this.mActivity = activity;
     }
 
 
     private JSONObject randomEvent(JSONObject newData) throws JSONException, IOException {
-        switch (getRandomValue(10)) {
+        switch (getRandomValue(1)) {
             case 0:
-                return generateMessage(newData);
+                return newData;
             case 1:
-                return generateMessage(newData);
+                return newData;
             case 2:
-                return generateMessage(newData);
+                return newData;
             case 3:
                 return generateMessage(newData);
             case 4:

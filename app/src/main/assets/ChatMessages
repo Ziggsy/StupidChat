@@ -17,6 +17,43 @@
       "from_me": true,
       "text": "Wanna grab a beer?",
       "created": 1555700396
+    },
+    {
+      "id": "test-message-004",
+      "from_me": false,
+      "text": "Yea",
+      "created": 1555700496
+    },
+    {
+      "id": "test-message-005",
+      "from_me": false,
+      "text": "Where?",
+      "created": 1555700596
+    },
+    {
+      "id": "test-message-006",
+      "from_me": true,
+      "text": "New Arbat Ave, 2, Moskva
+      Good place here",
+      "created": 1555700696
+    },
+    {
+      "id": "test-message-007",
+      "from_me": true,
+      "text": "23:00 it is ok?",
+      "created": 1555700796
+    },
+    {
+      "id": "test-message-008",
+      "from_me": false,
+      "text": "OK. Let'do it",
+      "created": 1555700896
+    },
+    {
+      "id": "test-message-009",
+      "from_me": false,
+      "text": "Wanna take a taxi letter?",
+      "created": 1555700996
     }
   ]
 }

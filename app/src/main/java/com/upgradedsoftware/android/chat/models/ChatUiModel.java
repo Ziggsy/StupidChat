@@ -1,38 +1,33 @@
 package com.upgradedsoftware.android.chat.models;
 
 public class ChatUiModel {
-    private String chatId;
-    private Long updated;
+    private String messageID;
+    private Boolean fromMe;
+    private String textMessage;
     private Long created;
-    private Boolean unread;
-    private UserModel user;
 
-    public ChatUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user){
-        this.chatId = chatId;
-        this.updated = updated;
+    public ChatUiModel(String messageID, Boolean fromMe, String textMessage, Long created){
+        this.messageID = messageID;
+        this.fromMe = fromMe;
+        this.textMessage = textMessage;
         this.created = created;
-        this.unread = unread;
-        this.user = user;
     }
 
-    public String getChatId() {
-        return chatId;
+
+    public String getMessageID() {
+        return messageID;
     }
 
-    public Long getUpdated() {
-        return updated;
+    public Boolean getFromMe() {
+        return fromMe;
+    }
+
+    public String getTextMessage() {
+        return textMessage;
     }
 
     public Long getCreated() {
         return created;
-    }
-
-    public Boolean getUnread() {
-        return unread;
-    }
-
-    public UserModel getUser() {
-        return user;
     }
 }
 

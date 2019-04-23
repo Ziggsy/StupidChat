@@ -1,18 +1,33 @@
 package com.upgradedsoftware.android.chat.ChatActivity;
 
-import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.upgradedsoftware.android.chat.R;
+import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
+import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.task.FakeChatRequest;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 
-public class ChatActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+interface ChatActivityInterface {
+
+    void newDataReceived(ArrayList<ChatUiModel> object);
+}
+
+public class ChatActivity extends AppCompatActivity implements ChatActivityInterface {
+
+    ChatAdapter adapter;
+    private boolean first_setup = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,9 +53,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void initFakeRequests() {
-        FakeChatRequest server = new FakeChatRequest();
-        server.setActivity(this);
-        server.execute(DataHolder.getInstance().mJSONObjectMessages);
+        FakeChatRequest serverChat = new FakeChatRequest();
+        serverChat.setActivity(this);
+        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolder.getInstance().mJSONObjectMessages);
+    }
+
+    private void initRecycler(List<ChatUiModel> data) {
+        RecyclerView recyclerView = findViewById(R.id.recyclerChat);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        adapter.setClickListener(this);
+        adapter = new ChatAdapter(this, data);
+        recyclerView.setAdapter(adapter);
+        first_setup = false;
     }
 
     @Override
@@ -61,5 +85,19 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void newDataReceived(ArrayList<ChatUiModel> data) {
+        DataHolder.getInstance().mChatUiModel = data;
+
+        if (first_setup) {
+            initRecycler(data);
+        } else {
+            adapter.setNewData(data);
+            adapter.notifyDataSetChanged();
+            RecyclerView recyclerView = findViewById(R.id.recyclerChat);
+            recyclerView.scrollToPosition(adapter.getItemCount());
+        }
     }
 }

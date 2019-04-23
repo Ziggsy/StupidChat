@@ -32,7 +32,7 @@
         android:layout_below="@id/myFirstAndLast"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        android:text="I'am Android Developer :)"
+        android:text="I am Android Developer :)"
         android:textSize="16sp"/>
 
 

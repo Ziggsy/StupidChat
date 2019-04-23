@@ -38,4 +38,11 @@ public class TimeParser {
         }
 
     }
+
+    public String parseInDay(Long date){
+        final SimpleDateFormat NOTIFICATION_TIME_FORMAT;
+        NOTIFICATION_TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        NOTIFICATION_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return NOTIFICATION_TIME_FORMAT.format(date * 1000);
+    }
 }
