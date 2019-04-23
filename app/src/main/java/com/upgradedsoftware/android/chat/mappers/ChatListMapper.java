@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -45,7 +47,14 @@ public class ChatListMapper {
             list.add(element);
         }
 
+        sortChatsTimeLine(list);
+
         return list;
+    }
+
+    private void sortChatsTimeLine(ArrayList<ContactUiModel> list) {
+        Collections.sort(list);
+        Collections.reverse(list);
     }
 
     private UserModel parseUser(JSONObject usersInChatArray) throws JSONException {

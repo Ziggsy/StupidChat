@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactUiModel {
+public class ContactUiModel implements Comparable {
     private String chatId;
     private Long updated;
     private Long created;
@@ -37,6 +37,13 @@ public class ContactUiModel {
 
     public UserModel getUser() {
         return user;
+    }
+
+    @Override
+    public int compareTo(Object object) {
+        Long compareUpdated=((ContactUiModel)object).getUpdated();
+        return this.updated.intValue() - compareUpdated.intValue();
+
     }
 }
 

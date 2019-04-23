@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -64,6 +65,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.unreadStatus.setVisibility(View.INVISIBLE);
             holder.subText.setText(R.string.default_read);
             holder.subText.setVisibility(View.VISIBLE);
+            holder.subText.setTextColor(Color.parseColor("#FF868686"));
         }
 
         if(DataHolder.getInstance().imageMap != null)
@@ -71,7 +73,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
             }
 
-        holder.lastMessageTime.setText(formatTimeSimple(data.getUpdated()));
+        holder.lastMessageTime.setText(new TimeParser().timeParser(data.getUpdated()));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -110,14 +112,4 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         void onItemClick(View view, int position);
     }
 
-    public static String formatTimeSimple(Long date) {
-        final SimpleDateFormat NOTIFICATION_TIME_FORMAT;
-        NOTIFICATION_TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
-
-        if (date == null || date == 0) {
-            return "-";
-        }
-        NOTIFICATION_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return NOTIFICATION_TIME_FORMAT.format(date * 1000);
-    }
 }

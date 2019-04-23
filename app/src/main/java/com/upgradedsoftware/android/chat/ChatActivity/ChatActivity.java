@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.task.FakeChatRequest;
-import com.upgradedsoftware.android.chat.task.FakeContactRequest;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 

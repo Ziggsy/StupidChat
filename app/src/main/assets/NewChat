@@ -2,7 +2,7 @@
   "chats": [
     {
       "id": "test-chat-001",
-      "updated": 1555286600,
+      "updated": 1556022893,
       "created": 1555286500,
       "unread": true,
       "with_user": {
@@ -18,7 +18,7 @@
     },
     {
       "id": "test-chat-002",
-      "updated": 1555286700,
+      "updated": 1555936493,
       "created": 1555286600,
       "unread": false,
       "with_user": {
@@ -34,7 +34,7 @@
     },
     {
       "id": "test-chat-003",
-      "updated": 1555286800,
+      "updated": 1555850093,
       "created": 1555286700,
       "unread": true,
       "with_user": {
@@ -50,7 +50,7 @@
     },
     {
       "id": "test-chat-004",
-      "updated": 1555285610,
+      "updated": 1555763693,
       "created": 1555285500,
       "unread": false,
       "with_user": {
@@ -66,7 +66,7 @@
     },
     {
       "id": "test-chat-005",
-      "updated": 1555288710,
+      "updated": 1524227693,
       "created": 1555288600,
       "unread": false,
       "with_user": {
@@ -82,7 +82,7 @@
     },
     {
       "id": "test-chat-006",
-      "updated": 1555281300,
+      "updated": 1553344493,
       "created": 1555281200,
       "unread": true,
       "with_user": {
