@@ -58,9 +58,8 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     }
 
     public void onReceive(JSONObject json) {
-        ChatListMapper mapper = new ChatListMapper();
         try {
-            ArrayList<ContactUiModel> object = mapper.mapToUI(json);
+            ArrayList<ContactUiModel> object = ChatListMapper.mapToUI(json);
             mActivity.newDataReceived(object);
         } catch (JSONException e) {
             e.printStackTrace();

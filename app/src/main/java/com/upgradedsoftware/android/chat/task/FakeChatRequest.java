@@ -38,11 +38,9 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
         super.onProgressUpdate(values);
     }
 
-    public void onReceive(JSONObject json) {
-        MessageMapper mapper = new MessageMapper();
-
+    private void onReceive(JSONObject json) {
         try {
-            ArrayList<ChatUiModel> object = mapper.mapToUI(json);
+            ArrayList<ChatUiModel> object = MessageMapper.mapToUI(json);
             mActivity.newDataReceived(object);
         } catch (JSONException e) {
             e.printStackTrace();

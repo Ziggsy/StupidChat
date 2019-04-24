@@ -36,7 +36,7 @@ interface ContactListInterface {
 
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
 
-    ContactsAdapter adapter;
+    private ContactsAdapter adapter;
     private boolean first_setup = true;
     private static final Integer ACTIVITY_LAYOUT = R.layout.activity_main;
 

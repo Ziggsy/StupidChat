@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
+import com.upgradedsoftware.android.chat.models.ItemViewType;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.List;
@@ -23,8 +24,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mData = data;
     }
 
-    public ChatAdapter(Context context, List<ChatUiModel> data) {
-        this.mInflater = LayoutInflater.from(context);
+    public ChatAdapter( List<ChatUiModel> data) {
         this.mData = data;
     }
 
@@ -32,11 +32,13 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         switch (viewType) {
-            case 0: {
+            case ItemViewType.FOR: {
+                mInflater = LayoutInflater.from(viewGroup.getContext());
                 View view = mInflater.inflate((R.layout.item_message_for_user), viewGroup, false);
                 return new ViewHolderForMe(view);
             }
-            case 1: {
+            case ItemViewType.FROM: {
+                mInflater = LayoutInflater.from(viewGroup.getContext());
                 View view = mInflater.inflate((R.layout.item_message_from_user), viewGroup, false);
                 return new ViewHolderFromMe(view);
             }
@@ -47,12 +49,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
-            case 0: {
+            case ItemViewType.FOR: {
                 ViewHolderForMe viewHolderForMe = (ViewHolderForMe) viewHolder;
                 viewHolderForMe.bind(mData.get(position));
                 break;
             }
-            case 1:  {
+            case ItemViewType.FROM:  {
                 ViewHolderFromMe viewHolderFromMe = (ViewHolderFromMe) viewHolder;
                 viewHolderFromMe.bind(mData.get(position));
                 break;
@@ -75,8 +77,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class ViewHolderForMe extends RecyclerView.ViewHolder {
 
-        TextView message;
-        TextView time;
+        private TextView message;
+        private TextView time;
 
         ViewHolderForMe(View itemView) {
             super(itemView);
@@ -93,8 +95,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class ViewHolderFromMe extends RecyclerView.ViewHolder {
 
-        TextView message;
-        TextView time;
+        private TextView message;;
+        private TextView time;
 
         ViewHolderFromMe(View itemView) {
             super(itemView);

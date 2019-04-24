@@ -32,7 +32,7 @@ interface ChatActivityInterface {
 
 public class ChatActivity extends AppCompatActivity implements ChatActivityInterface {
 
-    ChatAdapter adapter;
+    private ChatAdapter adapter;
     private boolean firstSetup = true;
     private RecyclerView recyclerView;
     FakeChatRequest serverChat;
@@ -111,7 +111,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private void initRecycler(List<ChatUiModel> data) {
         this.recyclerView = findViewById(R.id.recyclerChat);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ChatAdapter(this, data);
+        adapter = new ChatAdapter(data);
         recyclerView.setAdapter(adapter);
         this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
         firstSetup = false;

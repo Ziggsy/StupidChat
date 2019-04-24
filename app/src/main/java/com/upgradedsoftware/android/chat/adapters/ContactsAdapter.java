@@ -26,8 +26,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private ItemClickListener mClickListener;
     private AvatarClickListener mAvatarListener;
 
-    public ContactsAdapter(Context context, List<ContactUiModel> data, ItemClickListener listener, AvatarClickListener mAvatarListener) {
-        this.mInflater = LayoutInflater.from(context);
+    public ContactsAdapter(List<ContactUiModel> data, ItemClickListener listener, AvatarClickListener mAvatarListener) {
         this.mData = data;
         this.mClickListener = listener;
         this.mAvatarListener = mAvatarListener;
@@ -48,6 +47,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        mInflater = LayoutInflater.from(parent.getContext());
         View view = mInflater.inflate(R.layout.item_contact_in_list, parent, false);
         return new ViewHolder(view);
     }
@@ -75,16 +75,16 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
                 holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
             }
 
-        holder.lastMessageTime.setText(new TimeParser().timeParser(data.getUpdated()));
+        holder.lastMessageTime.setText(TimeParser.timeParser(data.getUpdated()));
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView userName;
-        ImageView unreadStatus;
-        ImageView userAvatar;
-        TextView lastMessageTime;
-        TextView subText;
+        private TextView userName;
+        private ImageView unreadStatus;
+        private ImageView userAvatar;
+        private TextView lastMessageTime;
+        private TextView subText;
 
         ViewHolder(View itemView) {
             super(itemView);

@@ -16,7 +16,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
 
 public class MessageMapper {
 
-    public ArrayList<ChatUiModel> mapToUI(JSONObject response) throws JSONException {
+    static public ArrayList<ChatUiModel> mapToUI(JSONObject response) throws JSONException {
 
         ArrayList<ChatUiModel> list = new ArrayList<>();
 

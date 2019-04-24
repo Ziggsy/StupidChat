@@ -29,8 +29,9 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 
 public class ChatListMapper {
 
+    private ChatListMapper(){}
 
-    public ArrayList<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
+    public static ArrayList<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
         ArrayList<ContactUiModel> list = new ArrayList<>();
 
         JSONArray chatsArray = response.getJSONArray(KEY_CHAT_CHATS);
@@ -52,12 +53,12 @@ public class ChatListMapper {
         return list;
     }
 
-    private void sortChatsTimeLine(ArrayList<ContactUiModel> list) {
+    private static void sortChatsTimeLine(ArrayList<ContactUiModel> list) {
         Collections.sort(list);
         Collections.reverse(list);
     }
 
-    private UserModel parseUser(JSONObject usersInChatArray) throws JSONException {
+    private static UserModel parseUser(JSONObject usersInChatArray) throws JSONException {
         UserModel element = new UserModel(
                 usersInChatArray.getString(KEY_USER_ID),
                 usersInChatArray.getString(KEY_USER_NAME),
@@ -67,13 +68,13 @@ public class ChatListMapper {
         return element;
     }
 
-    private UserSettings parseSettings(JSONObject settings) throws JSONException {
+    private static UserSettings parseSettings(JSONObject settings) throws JSONException {
         return new UserSettings(
                 settings.getString(KEY_SETTING_WORK)
         );
     }
 
-    private UserAvatars parseAvatar(JSONObject avatar) throws JSONException {
+    private static UserAvatars parseAvatar(JSONObject avatar) throws JSONException {
         return new UserAvatars(
                 avatar.getString(KEY_AVATAR_URL)
         );
