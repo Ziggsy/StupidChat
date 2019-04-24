@@ -1,10 +1,19 @@
 package com.upgradedsoftware.android.chat.utils;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class TimeParser {
+
+    private static long moscowGMT  = 3L*60L*60L;
+
+    public static Long getCurrentTime() {
+        return System.currentTimeMillis() / 1000L + moscowGMT;
+    }
 
     public String timeParser(Long date){
         final SimpleDateFormat NOTIFICATION_TIME_FORMAT;
@@ -15,7 +24,8 @@ public class TimeParser {
         DAY_OF_THE_WEEK = new SimpleDateFormat("EEE", Locale.getDefault());
         DATE_FORMAT = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
 
-        long currentTime = System.currentTimeMillis() / 1000L;
+        long currentTime = System.currentTimeMillis() / 1000L + moscowGMT;
+        date = date + moscowGMT;
 
         if (date == null || date == 0) {
             return "-";

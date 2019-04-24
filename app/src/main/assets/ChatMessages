@@ -33,8 +33,7 @@
     {
       "id": "test-message-006",
       "from_me": true,
-      "text": "New Arbat Ave, 2, Moskva
-      Good place here",
+      "text": "New Arbat Ave, 2, Moskva, Good place here",
       "created": 1555700696
     },
     {

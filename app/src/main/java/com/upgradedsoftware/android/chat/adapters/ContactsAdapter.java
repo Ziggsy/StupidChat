@@ -24,11 +24,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     private List<ContactUiModel> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private AvatarClickListener mAvatarListener;
 
-    public ContactsAdapter(Context context, List<ContactUiModel> data, ItemClickListener listener) {
+    public ContactsAdapter(Context context, List<ContactUiModel> data, ItemClickListener listener, AvatarClickListener mAvatarListener) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.mClickListener = listener;
+        this.mAvatarListener = mAvatarListener;
     }
 
     public List<ContactUiModel> getData(){
@@ -98,7 +100,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
+            if (view.equals(userAvatar)){
+                if (mAvatarListener != null) mAvatarListener.onItemClick(userAvatar, getAdapterPosition());
+                return;
+            }
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+
         }
 
 

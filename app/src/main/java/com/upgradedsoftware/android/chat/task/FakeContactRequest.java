@@ -2,7 +2,7 @@ package com.upgradedsoftware.android.chat.task;
 
 import android.os.AsyncTask;
 
-import com.upgradedsoftware.android.chat.ContactList.ContactListActivity;
+import com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity;
 import com.upgradedsoftware.android.chat.mappers.ChatListMapper;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -27,14 +26,12 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     @Override
     protected Void doInBackground(JSONObject... data) {
         try {
-            for (int i = 0; i < 20; i++) {
-                TimeUnit.SECONDS.sleep(2);
+            for (int i = 0; i < 30; i++) {
+                TimeUnit.SECONDS.sleep(5);
                 JSONObject newData = randomEvent(data[0]);
                 publishProgress(newData);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -75,8 +72,9 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     }
 
 
-    private JSONObject randomEvent(JSONObject newData) throws JSONException, IOException {
+    private JSONObject randomEvent(JSONObject newData) throws JSONException {
         switch (getRandomValue(10)) {
+            // Тут хотел сделать другие ивенты, к примеру новый unread, новая ава и т.д
             case 0:
                 return generateNewChat(newData);
             case 1:
@@ -88,13 +86,13 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
             case 4:
                 return generateNewChat(newData);
             case 5:
-                return newData;
+                return generateNewChat(newData);
             case 6:
-                return newData;
+                return generateNewChat(newData);
             case 7:
-                return newData;
+                return generateNewChat(newData);
             case 8:
-                return newData;
+                return generateNewChat(newData);
             case 9:
                 return newData;
         }

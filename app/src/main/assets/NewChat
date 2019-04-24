@@ -7,12 +7,12 @@
       "unread": true,
       "with_user": {
         "id": "test-user-001",
-        "name": "Alan Perkins",
+        "name": "Elon Musk",
         "settings": {
-          "work": "CEO @ The LEGO Group"
+          "work": "CEO of SpaceX and Tesla"
         },
         "avatar": {
-          "url": "https://randomuser.me/api/portraits/lego/2.jpg"
+          "url": "https://pp.userapi.com/c852136/v852136599/faf17/lKG2unzamn0.jpg"
         }
       }
     },
@@ -23,12 +23,12 @@
       "unread": false,
       "with_user": {
         "id": "test-user-002",
-        "name": "Mathew Mendoza",
+        "name": "Tim Apple",
         "settings": {
-          "work": "CMO @ The LEGO Group"
+          "work": "Apple CEO"
         },
         "avatar": {
-          "url": "https://randomuser.me/api/portraits/lego/6.jpg"
+          "url": "https://pp.userapi.com/c844416/v844416599/1ebc6a/j65EDvzxVug.jpg"
         }
       }
     },
@@ -39,12 +39,12 @@
       "unread": true,
       "with_user": {
         "id": "test-user-003",
-        "name": "Austin Miller",
+        "name": "Sundar Pichai",
         "settings": {
-          "work": "CTO @ The LEGO Group"
+          "work": "Google CEO"
         },
         "avatar": {
-          "url": "https://randomuser.me/api/portraits/lego/7.jpg"
+          "url": "https://pp.userapi.com/c844416/v844416599/1ebc71/kHSNWrQFxeU.jpg"
         }
       }
     },
@@ -55,12 +55,12 @@
       "unread": false,
       "with_user": {
         "id": "test-chat-004",
-        "name": "Denis Petrov",
+        "name": "Pavel Durov",
         "settings": {
-          "work": "CEO @ The VK Group"
+          "work": "CEO at Telegram"
         },
         "avatar": {
-          "url": "https://vk.com/images/support/agents/new/agent_green.png"
+          "url": "https://pbs.twimg.com/profile_images/658376777258151936/-Jz8l4Rr_400x400.jpg"
         }
       }
     },
@@ -71,12 +71,12 @@
       "unread": false,
       "with_user": {
         "id": "test-user-005",
-        "name": "Alex Hoolu",
+        "name": "Bob Ross",
         "settings": {
-          "work": "CMO @ The VK Group"
+          "work": "Painter, art instructor, and television host"
         },
         "avatar": {
-          "url": "https://vk.com/images/support/agents/new/buddha_grey.png"
+          "url": "https://yt3.ggpht.com/a-/AAuE7mC75lyDOGkH_0L4_ZR6F4bfGviFjsMZIGa22w=s900-mo-c-c0xffffffff-rj-k-no"
         }
       }
     },
@@ -87,12 +87,12 @@
       "unread": true,
       "with_user": {
         "id": "test-user-006",
-        "name": "Maria Uji",
+        "name": "Nikola Tesla",
         "settings": {
-          "work": "CTO @ The VK Group"
+          "work": "Genius"
         },
         "avatar": {
-          "url": "https://vk.com/images/support/agents/new/nurse_green.png"
+          "url": "https://www.biography.com/.image/t_share/MTQ4NDI1NTU4NzM1MjAxNDgz/nikola_tesla_napoleon-sarony-public-domain-via-wikimedia-commons.jpg"
         }
       }
     }

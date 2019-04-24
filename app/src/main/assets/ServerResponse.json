@@ -1,18 +1,18 @@
 {
   "chats": [
     {
-      "id": "test-chat-001",
-      "updated": 1556022893,
+      "id": "test-chat-000",
+      "updated": 1556021893,
       "created": 1555286500,
       "unread": true,
       "with_user": {
-        "id": "test-user-001",
-        "name": "Alan Perkins",
+        "id": "test-user-000",
+        "name": "Keanu Reeves",
         "settings": {
-          "work": "CEO @ The LEGO Group"
+          "work": "Actor"
         },
         "avatar": {
-          "url": "https://randomuser.me/api/portraits/lego/2.jpg"
+          "url": "https://pp.userapi.com/c845018/v845018599/1ec1ac/MaAk0qHQ8Q0.jpg"
         }
       }
     }
