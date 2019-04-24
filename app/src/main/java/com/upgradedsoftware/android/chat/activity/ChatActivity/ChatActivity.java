@@ -35,6 +35,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     ChatAdapter adapter;
     private boolean firstSetup = true;
     private RecyclerView recyclerView;
+    FakeChatRequest serverChat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     private void initFakeRequests() {
-        FakeChatRequest serverChat = new FakeChatRequest();
+        serverChat = new FakeChatRequest();
         serverChat.setActivity(this);
         serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolder.getInstance().mJSONObjectMessages);
     }
@@ -126,5 +127,11 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
             adapter.notifyDataSetChanged();
             this.recyclerView.scrollToPosition(adapter.getItemCount());
         }
+    }
+
+    @Override
+    protected void onStop() {
+        serverChat.cancel(true);
+        super.onStop();
     }
 }
