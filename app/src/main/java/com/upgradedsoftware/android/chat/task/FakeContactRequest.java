@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +22,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
 
 public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
-    private ContactListActivity mActivity;
+    private WeakReference<ContactListActivity> mActivity;
 
     @Override
     protected Void doInBackground(JSONObject... data) {
@@ -47,27 +48,17 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
         super.onProgressUpdate(values);
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Void result) {
-        super.onPostExecute(result);
-    }
-
-    public void onReceive(JSONObject json) {
+    private void onReceive(JSONObject json) {
         try {
             ArrayList<ContactUiModel> object = ChatListMapper.mapToUI(json);
-            mActivity.newDataReceived(object);
+            mActivity.get().newDataReceived(object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public void setActivity(ContactListActivity contactListActivity) {
-        this.mActivity = contactListActivity;
+        this.mActivity = new WeakReference<>(contactListActivity);
     }
 
 
@@ -99,7 +90,7 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     }
 
     private JSONObject generateNewChat(JSONObject newData) throws JSONException {
-        JSONObject newChat = Helper.getInstance().initJSON(mActivity, JSON_NEW_CHATTERS);
+        JSONObject newChat = Helper.getInstance().initJSON(mActivity.get(), JSON_NEW_CHATTERS);
         JSONArray chatsArray = newChat.getJSONArray(KEY_CHAT_CHATS);
         JSONObject jsonObject = chatsArray.getJSONObject(getRandomValue(chatsArray.length()));
         JSONArray newChatArray = newData.getJSONArray(KEY_CHAT_CHATS).put(jsonObject);

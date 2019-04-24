@@ -1,6 +1,5 @@
 package com.upgradedsoftware.android.chat.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,19 +17,20 @@ import java.util.List;
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ChatUiModel> mData;
-    private LayoutInflater mInflater;
 
     public void setNewData(List<ChatUiModel> data) {
         this.mData = data;
     }
 
-    public ChatAdapter( List<ChatUiModel> data) {
+    public ChatAdapter(List<ChatUiModel> data) {
         this.mData = data;
     }
 
 
+    @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        LayoutInflater mInflater;
         switch (viewType) {
             case ItemViewType.FOR: {
                 mInflater = LayoutInflater.from(viewGroup.getContext());
@@ -54,7 +54,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 viewHolderForMe.bind(mData.get(position));
                 break;
             }
-            case ItemViewType.FROM:  {
+            case ItemViewType.FROM: {
                 ViewHolderFromMe viewHolderFromMe = (ViewHolderFromMe) viewHolder;
                 viewHolderFromMe.bind(mData.get(position));
                 break;
@@ -65,7 +65,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if(mData.get(position).getFromMe()) return 1;
+        if (mData.get(position).getFromMe()) return 1;
         else return 0;
     }
 
@@ -75,7 +75,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return mData.size();
     }
 
-    public class ViewHolderForMe extends RecyclerView.ViewHolder {
+    private class ViewHolderForMe extends RecyclerView.ViewHolder {
 
         private TextView message;
         private TextView time;
@@ -88,14 +88,14 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void bind(ChatUiModel item) {
             message.setText(item.getTextMessage());
-            time.setText(new TimeParser().parseInDay(item.getCreated()));
+            time.setText(TimeParser.parseInDay(item.getCreated()));
         }
 
     }
 
-    public class ViewHolderFromMe extends RecyclerView.ViewHolder {
+    private class ViewHolderFromMe extends RecyclerView.ViewHolder {
 
-        private TextView message;;
+        private TextView message;
         private TextView time;
 
         ViewHolderFromMe(View itemView) {
@@ -106,7 +106,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         void bind(ChatUiModel item) {
             message.setText(item.getTextMessage());
-            time.setText(new TimeParser().parseInDay(item.getCreated()));
+            time.setText(TimeParser.parseInDay(item.getCreated()));
         }
 
     }

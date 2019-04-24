@@ -11,7 +11,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -29,7 +28,8 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 
 public class ChatListMapper {
 
-    private ChatListMapper(){}
+    private ChatListMapper() {
+    }
 
     public static ArrayList<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
         ArrayList<ContactUiModel> list = new ArrayList<>();
@@ -59,13 +59,12 @@ public class ChatListMapper {
     }
 
     private static UserModel parseUser(JSONObject usersInChatArray) throws JSONException {
-        UserModel element = new UserModel(
+        return new UserModel(
                 usersInChatArray.getString(KEY_USER_ID),
                 usersInChatArray.getString(KEY_USER_NAME),
                 parseSettings(usersInChatArray.getJSONObject(KEY_USER_SETTINGS)),
                 parseAvatar(usersInChatArray.getJSONObject(KEY_USER_AVATAR))
         );
-        return element;
     }
 
     private static UserSettings parseSettings(JSONObject settings) throws JSONException {

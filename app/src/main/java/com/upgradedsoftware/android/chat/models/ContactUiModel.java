@@ -1,9 +1,5 @@
 package com.upgradedsoftware.android.chat.models;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContactUiModel implements Comparable {
     private String chatId;
     private Long updated;
@@ -11,7 +7,7 @@ public class ContactUiModel implements Comparable {
     private Boolean unread;
     private UserModel user;
 
-    public ContactUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user){
+    public ContactUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user) {
         this.chatId = chatId;
         this.updated = updated;
         this.created = created;
@@ -41,7 +37,7 @@ public class ContactUiModel implements Comparable {
 
     @Override
     public int compareTo(Object object) {
-        Long compareUpdated=((ContactUiModel)object).getUpdated();
+        Long compareUpdated = ((ContactUiModel) object).getUpdated();
         return this.updated.intValue() - compareUpdated.intValue();
 
     }

@@ -35,7 +35,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private ChatAdapter adapter;
     private boolean firstSetup = true;
     private RecyclerView recyclerView;
-    FakeChatRequest serverChat;
+    private FakeChatRequest serverChat;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

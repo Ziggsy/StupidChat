@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class Helper {
     private static final Helper ourInstance = new Helper();
@@ -51,7 +52,7 @@ public class Helper {
             byte[] buffer = new byte[size];
             is.read(buffer);
             is.close();
-            return new JSONObject(new String(buffer, "UTF-8"));
+            return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
         } catch (IOException ex) {
             ex.printStackTrace();
         } catch (JSONException e) {

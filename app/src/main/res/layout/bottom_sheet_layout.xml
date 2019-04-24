@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_toEndOf="@id/myAvatar"
-        android:text="Igor Klimov"
+        android:text="@string/info_me"
         android:textColor="@color/colorAccent"
         android:textSize="20sp" />
 
@@ -32,7 +32,7 @@
         android:layout_below="@id/myFirstAndLast"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        android:text="I am Android Developer :)"
+        android:text="@string/info_about_me"
         android:textSize="16sp"/>
 
 

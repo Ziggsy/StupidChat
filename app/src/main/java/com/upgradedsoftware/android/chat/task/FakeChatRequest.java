@@ -10,12 +10,13 @@ import com.upgradedsoftware.android.chat.utils.DataHolder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
-    private ChatActivity mActivity;
+    private WeakReference<ChatActivity> mActivity;
 
     @Override
     protected Void doInBackground(JSONObject... data) {
@@ -41,14 +42,14 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     private void onReceive(JSONObject json) {
         try {
             ArrayList<ChatUiModel> object = MessageMapper.mapToUI(json);
-            mActivity.newDataReceived(object);
+            mActivity.get().newDataReceived(object);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public void setActivity(ChatActivity activity) {
-        this.mActivity = activity;
+        this.mActivity = new WeakReference<>(activity);
     }
 
 }

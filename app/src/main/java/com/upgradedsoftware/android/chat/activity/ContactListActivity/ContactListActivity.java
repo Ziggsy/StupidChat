@@ -30,8 +30,6 @@ import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONS
 
 interface ContactListInterface {
     void newDataReceived(List<ContactUiModel> data);
-
-    void showBottomSheet(UserModelShort model);
 }
 
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
@@ -96,7 +94,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             }
         };
 
-        adapter = new ContactsAdapter(this, data, listener, avatarClickListener);
+        adapter = new ContactsAdapter(data, listener, avatarClickListener);
         recyclerView.setAdapter(adapter);
         first_setup = false;
     }
@@ -121,7 +119,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         }
     }
 
-    @Override
     public void showBottomSheet(UserModelShort model) {
         BottomSheetDialog bottomSheet = new BottomSheetDialog();
         bottomSheet.id = model.getUserId();

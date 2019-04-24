@@ -17,8 +17,6 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.upgradedsoftware.android.chat.R;
 
-import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
-
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     public String id = "";
@@ -27,7 +25,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_layout, container, false);
     }
 
@@ -35,7 +33,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (id.isEmpty() && userName.isEmpty()) {
-            downloadImage(URL_MY_AVATAR);
+            initMyProfile();
         } else {
             loadUser();
         }
@@ -50,14 +48,14 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         image.setImageBitmap(DataHolder.getInstance().imageMap.get(id));
     }
 
-    private void downloadImage(String url) {
+    private void initMyProfile() {
         Glide.with(this)
                 .asBitmap()
-                .load(url)
+                .load(Helper.URL_MY_AVATAR)
                 .apply(RequestOptions.circleCropTransform())
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                         ImageView view = getView().findViewById(R.id.myAvatar);
                         view.setImageBitmap(resource);
                     }

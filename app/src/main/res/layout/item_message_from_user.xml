@@ -24,7 +24,6 @@
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
             android:textSize="17sp"
-            android:text="Hey, what's up?"
             android:textColor="@color/colorAccent" />
 
         <TextView
@@ -33,7 +32,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/message"
             android:layout_alignEnd="@+id/message"
-            android:text="00:00"
             android:textSize="8sp" />
 
     </RelativeLayout>

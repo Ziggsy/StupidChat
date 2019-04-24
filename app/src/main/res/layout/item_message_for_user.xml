@@ -22,7 +22,6 @@
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
             android:paddingBottom="4dp"
-            android:text="Hey, what's up?"
             android:textSize="17sp"
             android:textColor="@color/colorAccent" />
 
@@ -32,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/message"
             android:layout_alignEnd="@+id/message"
-            android:text="00:00"
             android:textSize="8sp" />
 
     </RelativeLayout>
