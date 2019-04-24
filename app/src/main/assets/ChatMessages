@@ -15,13 +15,13 @@
     {
       "id": "test-message-003",
       "from_me": true,
-      "text": "Wanna grab a beer?",
+      "text": "Wanna grab some beer?",
       "created": 1555700396
     },
     {
       "id": "test-message-004",
       "from_me": false,
-      "text": "Yea",
+      "text": "Yeah",
       "created": 1555700496
     },
     {
@@ -33,25 +33,25 @@
     {
       "id": "test-message-006",
       "from_me": true,
-      "text": "New Arbat Ave, 2, Moskva, Good place here",
+      "text": "New Arbat Ave, 2, Moscow, one good place here",
       "created": 1555700696
     },
     {
       "id": "test-message-007",
       "from_me": true,
-      "text": "23:00 is it ok?",
+      "text": "23:00 is ok?",
       "created": 1555700796
     },
     {
       "id": "test-message-008",
       "from_me": false,
-      "text": "OK. Let's do it",
+      "text": "OK. Let's go",
       "created": 1555700896
     },
     {
       "id": "test-message-009",
       "from_me": false,
-      "text": "Wanna take a taxi letter?",
+      "text": "Wanna call a taxi later?",
       "created": 1555700996
     }
   ]
