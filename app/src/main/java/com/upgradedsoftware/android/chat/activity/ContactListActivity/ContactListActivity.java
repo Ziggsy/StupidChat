@@ -18,9 +18,9 @@ import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.models.UserModelShort;
-import com.upgradedsoftware.android.chat.task.FakeContactRequest;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.tasks.FakeContactRequest;
 import com.upgradedsoftware.android.chat.utils.BottomSheetDialog;
+import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 
 import java.util.HashMap;
@@ -35,6 +35,7 @@ interface ContactListInterface {
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
 
     private ContactsAdapter adapter;
+    private RecyclerView mRecyclerView;
     private boolean first_setup = true;
     private static final Integer ACTIVITY_LAYOUT = R.layout.activity_main;
 
@@ -71,13 +72,14 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     }
 
     private void initRecycler(List<ContactUiModel> data) {
-        RecyclerView recyclerView = findViewById(R.id.recyclerContacts);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = findViewById(R.id.recyclerContacts);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ContactsAdapter.ItemClickListener listener = new ContactsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
                 intent.putExtra("key", adapter.getData().get(position).getUser().getUserId());
+                intent.putExtra("chatID", adapter.getData().get(position).getChatId());
                 intent.putExtra("name", adapter.getData().get(position).getUser().getName());
                 ContactListActivity.this.startActivity(intent);
             }
@@ -95,7 +97,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         };
 
         adapter = new ContactsAdapter(data, listener, avatarClickListener);
-        recyclerView.setAdapter(adapter);
+        mRecyclerView.setAdapter(adapter);
         first_setup = false;
     }
 
@@ -129,7 +131,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
     private void downloadImage(List<ContactUiModel> data, List<ContactUiModel> listChatModel, int i) {
         final String key = listChatModel.get(i).getUser().getUserId();
-        Glide.with(this)
+        Glide.with(getApplicationContext())
                 .asBitmap()
                 .load(data.get(i).getUser().getUserAvatars().getUrl())
                 .apply(RequestOptions.circleCropTransform())
@@ -142,4 +144,13 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
                 });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

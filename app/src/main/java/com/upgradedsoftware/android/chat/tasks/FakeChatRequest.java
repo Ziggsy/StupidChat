@@ -1,4 +1,4 @@
-package com.upgradedsoftware.android.chat.task;
+package com.upgradedsoftware.android.chat.tasks;
 
 import android.os.AsyncTask;
 
@@ -22,7 +22,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     protected Void doInBackground(JSONObject... data) {
         try {
             for (int i = 0; i < 9999; i++) {
-                publishProgress(data);
+                publishProgress(DataHolder.getInstance().mJSONObjectContact);
                 TimeUnit.SECONDS.sleep(5);
             }
         } catch (InterruptedException e) {

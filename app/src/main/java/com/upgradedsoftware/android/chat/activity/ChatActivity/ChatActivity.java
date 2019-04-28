@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
-import com.upgradedsoftware.android.chat.task.FakeChatRequest;
+import com.upgradedsoftware.android.chat.models.MessageRequestModel;
+import com.upgradedsoftware.android.chat.tasks.FakeChatRequest;
+import com.upgradedsoftware.android.chat.tasks.SendMessageRequest;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
@@ -36,6 +38,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private boolean firstSetup = true;
     private RecyclerView recyclerView;
     private FakeChatRequest serverChat;
+    private String mChatId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,15 +47,18 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         initMessageList();
         initFakeRequests();
         initClickListener();
-        initUI();
+        initDataAndUI();
     }
 
-    private void initUI(){
+    private void initDataAndUI(){
         Bundle bundle = getIntent().getExtras();
         TextView view = findViewById(R.id.userName);
-        view.setText(bundle.getString("name"));
-        ImageView imageView = findViewById(R.id.userAvatar);
-        imageView.setImageBitmap(DataHolder.getInstance().imageMap.get(bundle.getString("key")));
+        if (bundle != null) {
+            view.setText(bundle.getString("name"));
+            ImageView imageView = findViewById(R.id.userAvatar);
+            imageView.setImageBitmap(DataHolder.getInstance().imageMap.get(bundle.getString("key")));
+            mChatId = bundle.getString("chatID");
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -84,22 +90,34 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
             public void onClick(View v) {
                 EditText editText = findViewById(R.id.messageEntry);
                 if(!editText.getText().toString().equals("")) {
-                    DataHolder.getInstance().mChatUiModel.add(new ChatUiModel(
-                            "1",
-                            true,
+                    sendMessageToServer(new MessageRequestModel(
+                            mChatId,
                             editText.getText().toString(),
                             TimeParser.getCurrentTime()
                     ));
-                    adapter.notifyDataSetChanged();
-                    editText.setText("");
-                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
+
+
+//                    DataHolder.getInstance().mChatUiModel.add(new ChatUiModel(
+//                            "1",
+//                            true,
+//                            editText.getText().toString(),
+//                            TimeParser.getCurrentTime()
+//                    ));
+//                    adapter.notifyDataSetChanged();
+//                    editText.setText("");
+//                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
                 }
             }
         });
     }
 
+    private void sendMessageToServer(MessageRequestModel messageRequestModel) {
+        SendMessageRequest messageRequest = new SendMessageRequest();
+        messageRequest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, messageRequestModel);
+    }
+
     private void initMessageList() {
-        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, Helper.JSON_CHAT_MESSAGES);
+        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, getApplicationContext(), Helper.JSON_CHAT_MESSAGES);
     }
 
     private void initFakeRequests() {

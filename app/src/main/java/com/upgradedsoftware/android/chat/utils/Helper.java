@@ -1,10 +1,12 @@
 package com.upgradedsoftware.android.chat.utils;
 
 import android.app.Activity;
+import android.content.Context;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -45,19 +47,31 @@ public class Helper {
     private Helper() {
     }
 
-    public JSONObject initJSON(Activity activity, String way) {
-        try {
-            InputStream is = activity.getAssets().open(way);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+    public JSONObject initJSON(Activity activity, Context context, String way) {
+        File file = new File(context.getFilesDir(), way);
+
+        // Смотрим есть ли файл БД фейкового сервера на девайсе, если нет запускаем дефолтный JSON из assets
+        if(file.exists()) {
+            try {
+                return new JSONObject(file.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                InputStream is = activity.getAssets().open(way);
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
         return null;
     }
 }

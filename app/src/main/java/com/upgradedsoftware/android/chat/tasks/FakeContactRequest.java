@@ -1,4 +1,4 @@
-package com.upgradedsoftware.android.chat.task;
+package com.upgradedsoftware.android.chat.tasks;
 
 import android.os.AsyncTask;
 
