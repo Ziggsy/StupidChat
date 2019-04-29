@@ -2,6 +2,7 @@ package com.upgradedsoftware.android.chat.adapters;
 
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +10,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.utils.Helper;
+import com.upgradedsoftware.android.chat.utils.MyDiffCallback;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.List;
@@ -33,7 +39,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     public void setNewData(List<ContactUiModel> data) {
-        this.mData = data;
+        final MyDiffCallback diffCallback = new MyDiffCallback(data, this.mData);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.mData.clear();
+        this.mData.addAll(data);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -66,13 +77,11 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.subText.setTextColor(Color.parseColor("#FF868686"));
         }
 
-        if (DataHolder.getInstance().imageMap != null)
-            if (DataHolder.getInstance().imageMap.containsKey(data.getUser().getUserId())) {
-                holder.userAvatar.setImageBitmap(DataHolder.getInstance().imageMap.get(data.getUser().getUserId()));
-            }
+        Helper.getInstance().imageLoader(holder, holder.userAvatar, getData().get(position).getUser().getUserAvatars().getUrl());
 
         holder.lastMessageTime.setText(TimeParser.timeParser(data.getUpdated()));
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -104,7 +113,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
 
         }
-
 
     }
 

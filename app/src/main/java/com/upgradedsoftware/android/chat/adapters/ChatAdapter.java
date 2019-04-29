@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ItemViewType;
+import com.upgradedsoftware.android.chat.models.MessageStatus;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.List;
@@ -65,8 +66,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mData.get(position).getFromMe()) return 1;
-        else return 0;
+        if (mData.get(position).getFromMe()) return ItemViewType.FROM;
+        else return ItemViewType.FOR;
     }
 
 
@@ -107,6 +108,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void bind(ChatUiModel item) {
             message.setText(item.getTextMessage());
             time.setText(TimeParser.parseInDay(item.getCreated()));
+
+            if(item.getMessageStatus() == MessageStatus.MESSAGE_ERROR){
+                itemView.setBackground(null);
+            }
         }
 
     }

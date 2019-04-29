@@ -11,7 +11,7 @@ public class MessageRequestModel {
         this.created = created;
     }
 
-    public String getMessageID() {
+    public String getChatID() {
         return chatID;
     }
 

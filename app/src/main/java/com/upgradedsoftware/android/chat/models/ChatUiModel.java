@@ -5,12 +5,22 @@ public class ChatUiModel {
     private Boolean fromMe;
     private String textMessage;
     private Long created;
+    private Integer mMessageStatus;
 
     public ChatUiModel(String messageID, Boolean fromMe, String textMessage, Long created){
         this.messageID = messageID;
         this.fromMe = fromMe;
         this.textMessage = textMessage;
         this.created = created;
+        this.mMessageStatus = MessageStatus.MESSAGE_OK;
+    }
+
+    public ChatUiModel(String messageID, Boolean fromMe, String textMessage, Long created, Integer status){
+        this.messageID = messageID;
+        this.fromMe = fromMe;
+        this.textMessage = textMessage;
+        this.created = created;
+        this.mMessageStatus = status;
     }
 
 
@@ -28,6 +38,10 @@ public class ChatUiModel {
 
     public Long getCreated() {
         return created;
+    }
+
+    public Integer getMessageStatus() {
+        return mMessageStatus;
     }
 }
 

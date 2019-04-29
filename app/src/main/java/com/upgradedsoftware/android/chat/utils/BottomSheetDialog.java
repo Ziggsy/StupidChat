@@ -12,16 +12,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.upgradedsoftware.android.chat.R;
+
+import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
 
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
     public String id = "";
     public String userName = "";
     public String userInfo = "";
+    public String url = "";
 
     @Nullable
     @Override
@@ -33,7 +37,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (id.isEmpty() && userName.isEmpty()) {
-            initMyProfile();
+            ImageView viewAvatar = getView().findViewById(R.id.myAvatar);
+            Helper.getInstance().imageLoader(getView(), viewAvatar, URL_MY_AVATAR);
         } else {
             loadUser();
         }
@@ -44,21 +49,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         text.setText(userName);
         TextView info = getView().findViewById(R.id.mySubString);
         info.setText(userInfo);
-        ImageView image = getView().findViewById(R.id.myAvatar);
-        image.setImageBitmap(DataHolder.getInstance().imageMap.get(id));
+        ImageView viewAvatar = getView().findViewById(R.id.myAvatar);
+        Helper.getInstance().imageLoader(getView(), viewAvatar, url);
     }
 
-    private void initMyProfile() {
-        Glide.with(this)
-                .asBitmap()
-                .load(Helper.URL_MY_AVATAR)
-                .apply(RequestOptions.circleCropTransform())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
-                        ImageView view = getView().findViewById(R.id.myAvatar);
-                        view.setImageBitmap(resource);
-                    }
-                });
-    }
 }

@@ -27,9 +27,9 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     @Override
     protected Void doInBackground(JSONObject... data) {
         try {
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 100; i++) {
                 TimeUnit.SECONDS.sleep(5);
-                JSONObject newData = randomEvent(data[0]);
+                JSONObject newData = randomEvent(data[0], i);
                 publishProgress(newData);
             }
         } catch (InterruptedException e) {
@@ -62,39 +62,43 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     }
 
 
-    private JSONObject randomEvent(JSONObject newData) throws JSONException {
+    private JSONObject randomEvent(JSONObject newData, int counter) throws JSONException {
         switch (getRandomValue(10)) {
             // Тут хотел сделать другие ивенты, к примеру новый unread, новая ава и т.д
             case 0:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 1:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 2:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 3:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 4:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 5:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 6:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 7:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 8:
-                return generateNewChat(newData);
+                return generateNewChat(newData, counter);
             case 9:
                 return newData;
         }
         return null;
     }
 
-    private JSONObject generateNewChat(JSONObject newData) throws JSONException {
+    private JSONObject generateNewChat(JSONObject newData, int counter) throws JSONException {
         JSONObject newChat = Helper.getInstance().initJSON(mActivity.get(), JSON_NEW_CHATTERS);
         JSONArray chatsArray = newChat.getJSONArray(KEY_CHAT_CHATS);
-        JSONObject jsonObject = chatsArray.getJSONObject(getRandomValue(chatsArray.length()));
-        JSONArray newChatArray = newData.getJSONArray(KEY_CHAT_CHATS).put(jsonObject);
-        return new JSONObject().put(KEY_CHAT_CHATS, newChatArray);
+        if (counter < chatsArray.length()) {
+            JSONObject jsonObject = chatsArray.getJSONObject(counter);
+            JSONArray newChatArray = newData.getJSONArray(KEY_CHAT_CHATS).put(jsonObject);
+            return new JSONObject().put(KEY_CHAT_CHATS, newChatArray);
+        } else {
+            return newData;
+        }
     }
 
     private int getRandomValue(Integer value) {

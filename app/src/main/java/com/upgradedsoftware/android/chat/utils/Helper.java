@@ -2,6 +2,13 @@ package com.upgradedsoftware.android.chat.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,20 +51,22 @@ public class Helper {
     public static final String KEY_SETTING_WORK = "work";
     public static final String KEY_AVATAR_URL = "url";
 
+    public static final String LIST_STATE_KEY = "state";
+
     private Helper() {
     }
 
-    public JSONObject initJSON(Activity activity, Context context, String way) {
-        File file = new File(context.getFilesDir(), way);
+    public JSONObject initJSON(Activity activity, String way) {
+//        File file = new File(context.getFilesDir(), way);
 
         // Смотрим есть ли файл БД фейкового сервера на девайсе, если нет запускаем дефолтный JSON из assets
-        if(file.exists()) {
-            try {
-                return new JSONObject(file.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
+//        if(file.exists()) {
+//            try {
+//                return new JSONObject(file.toString());
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        } else {
             try {
                 InputStream is = activity.getAssets().open(way);
                 int size = is.available();
@@ -70,8 +79,26 @@ public class Helper {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+//        }
 
         return null;
+    }
+
+    public void imageLoader(View view, ImageView image, String url){
+        Glide.with(view)
+                .asBitmap()
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .apply(RequestOptions.circleCropTransform())
+                .into(image);
+    }
+
+    public void imageLoader(ContactsAdapter.ViewHolder holder, ImageView image, String url) {
+        Glide.with(holder.itemView)
+                .asBitmap()
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .apply(RequestOptions.circleCropTransform())
+                .into(image);
     }
 }

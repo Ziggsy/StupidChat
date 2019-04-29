@@ -1,18 +1,14 @@
 package com.upgradedsoftware.android.chat.activity.ContactListActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
@@ -23,10 +19,10 @@ import com.upgradedsoftware.android.chat.utils.BottomSheetDialog;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
+import static com.upgradedsoftware.android.chat.utils.Helper.LIST_STATE_KEY;
 
 interface ContactListInterface {
     void newDataReceived(List<ContactUiModel> data);
@@ -34,10 +30,14 @@ interface ContactListInterface {
 
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
 
+    private static final Integer ACTIVITY_LAYOUT = R.layout.activity_main;
+
     private ContactsAdapter adapter;
     private RecyclerView mRecyclerView;
     private boolean first_setup = true;
-    private static final Integer ACTIVITY_LAYOUT = R.layout.activity_main;
+    private FakeContactRequest server;
+    private Parcelable mListState;
+    private RecyclerView.LayoutManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,16 +46,15 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         initChatList();
         initFakeServer();
         initBottomSheet();
+        initRecycler();
     }
 
-
     private void initChatList() {
-        DataHolder.getInstance().imageMap = new HashMap<>();
         DataHolder.getInstance().mJSONObjectContact = Helper.getInstance().initJSON(this, JSON_SERVER_RESPONSE);
     }
 
     private void initFakeServer() {
-        FakeContactRequest server = new FakeContactRequest();
+        server = new FakeContactRequest();
         server.setActivity(this);
         server.execute(DataHolder.getInstance().mJSONObjectContact);
     }
@@ -71,31 +70,36 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         });
     }
 
-    private void initRecycler(List<ContactUiModel> data) {
+    private void initRecycler() {
         mRecyclerView = findViewById(R.id.recyclerContacts);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        this.manager = mRecyclerView.getLayoutManager();
+    }
+
+    private void setAdapter(List<ContactUiModel> data) {
         ContactsAdapter.ItemClickListener listener = new ContactsAdapter.ItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
-                intent.putExtra("key", adapter.getData().get(position).getUser().getUserId());
+                intent.putExtra("url", adapter.getData().get(position).getUser().getUserAvatars().getUrl());
                 intent.putExtra("chatID", adapter.getData().get(position).getChatId());
                 intent.putExtra("name", adapter.getData().get(position).getUser().getName());
                 ContactListActivity.this.startActivity(intent);
             }
         };
+
         ContactsAdapter.AvatarClickListener avatarClickListener = new ContactsAdapter.AvatarClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 showBottomSheet(new UserModelShort(
                                 adapter.getData().get(position).getUser().getUserId(),
                                 adapter.getData().get(position).getUser().getName(),
-                                adapter.getData().get(position).getUser().getSettings().getWork()
+                                adapter.getData().get(position).getUser().getSettings().getWork(),
+                                adapter.getData().get(position).getUser().getUserAvatars().getUrl()
                         )
                 );
             }
         };
-
         adapter = new ContactsAdapter(data, listener, avatarClickListener);
         mRecyclerView.setAdapter(adapter);
         first_setup = false;
@@ -107,50 +111,57 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
         final List<ContactUiModel> listChatModel = DataHolder.getInstance().mContactUiModel;
 
-        for (int i = 0; i < DataHolder.getInstance().mContactUiModel.size(); i++) { // Проверяю есть ли уже аватарка у пользователя
-            if (!DataHolder.getInstance().imageMap.containsKey(listChatModel.get(i).getUser().getUserId())) {
-                downloadImage(data, listChatModel, i);
-            }
-        }
-
         if (first_setup) {
-            initRecycler(data);
+            setAdapter(data);
         } else {
             adapter.setNewData(data);
             adapter.notifyDataSetChanged();
         }
     }
 
+
     public void showBottomSheet(UserModelShort model) {
         BottomSheetDialog bottomSheet = new BottomSheetDialog();
-        bottomSheet.id = model.getUserId();
+        bottomSheet.id = model.getUserInfo();
         bottomSheet.userName = model.getName();
         bottomSheet.userInfo = model.getUserInfo();
+        bottomSheet.url = model.getUrl();
         bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
     }
 
-    private void downloadImage(List<ContactUiModel> data, List<ContactUiModel> listChatModel, int i) {
-        final String key = listChatModel.get(i).getUser().getUserId();
-        Glide.with(getApplicationContext())
-                .asBitmap()
-                .load(data.get(i).getUser().getUserAvatars().getUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                        DataHolder.getInstance().imageMap.put(key, resource);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+
+        // Save list state
+        Parcelable mListState = manager.onSaveInstanceState();
+        state.putParcelable(LIST_STATE_KEY, mListState);
+    }
+
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+
+        // Retrieve list state and list/item positions
+        if (state != null)
+            mListState = state.getParcelable(LIST_STATE_KEY);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        tryToRestore();
+    }
+
+    private void tryToRestore() {
+        if (mListState != null && manager != null) {
+            manager.onRestoreInstanceState(mListState);
+        }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        server.cancel(true);
+        super.onStop();
     }
+
+
 }

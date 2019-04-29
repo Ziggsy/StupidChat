@@ -4,11 +4,13 @@ public class UserModelShort {
     private String userId;
     private String name;
     private String userInfo;
+    private String url;
 
-    public UserModelShort(String userId, String name, String userInfo){
+    public UserModelShort(String userId, String name, String userInfo, String url){
         this.userId = userId;
         this.name = name;
         this.userInfo = userInfo;
+        this.url = url;
     }
 
     public String getUserId() {
@@ -21,5 +23,9 @@ public class UserModelShort {
 
     public String getUserInfo() {
         return userInfo;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

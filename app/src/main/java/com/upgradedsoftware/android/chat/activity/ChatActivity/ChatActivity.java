@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         if (bundle != null) {
             view.setText(bundle.getString("name"));
             ImageView imageView = findViewById(R.id.userAvatar);
-            imageView.setImageBitmap(DataHolder.getInstance().imageMap.get(bundle.getString("key")));
+            Helper.getInstance().imageLoader(view, imageView, bundle.getString("url"));
             mChatId = bundle.getString("chatID");
         }
     }
@@ -90,22 +90,13 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
             public void onClick(View v) {
                 EditText editText = findViewById(R.id.messageEntry);
                 if(!editText.getText().toString().equals("")) {
-                    sendMessageToServer(new MessageRequestModel(
+                    MessageRequestModel message = new MessageRequestModel(
                             mChatId,
                             editText.getText().toString(),
                             TimeParser.getCurrentTime()
-                    ));
-
-
-//                    DataHolder.getInstance().mChatUiModel.add(new ChatUiModel(
-//                            "1",
-//                            true,
-//                            editText.getText().toString(),
-//                            TimeParser.getCurrentTime()
-//                    ));
-//                    adapter.notifyDataSetChanged();
-//                    editText.setText("");
-//                    recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                    );
+                    sendMessageToServer(message);
+                    editText.setText("");
                 }
             }
         });
@@ -113,11 +104,12 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
 
     private void sendMessageToServer(MessageRequestModel messageRequestModel) {
         SendMessageRequest messageRequest = new SendMessageRequest();
+        messageRequest.setActivity(this);
         messageRequest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, messageRequestModel);
     }
 
     private void initMessageList() {
-        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, getApplicationContext(), Helper.JSON_CHAT_MESSAGES);
+        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, Helper.JSON_CHAT_MESSAGES);
     }
 
     private void initFakeRequests() {
@@ -143,7 +135,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         } else {
             adapter.setNewData(data);
             adapter.notifyDataSetChanged();
-            this.recyclerView.scrollToPosition(adapter.getItemCount());
+            this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
         }
     }
 
