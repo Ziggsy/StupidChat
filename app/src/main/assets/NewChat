@@ -5,6 +5,7 @@
       "updated": 1556022893,
       "created": 1555286500,
       "unread": true,
+      "last_message": "",
       "with_user": {
         "id": "test-user-001",
         "name": "Elon Musk",
@@ -21,6 +22,7 @@
       "updated": 1555936493,
       "created": 1555286600,
       "unread": false,
+      "last_message": "",
       "with_user": {
         "id": "test-user-002",
         "name": "Tim Apple",
@@ -37,6 +39,7 @@
       "updated": 1555850093,
       "created": 1555286700,
       "unread": true,
+      "last_message": "",
       "with_user": {
         "id": "test-user-003",
         "name": "Sundar Pichai",
@@ -53,6 +56,7 @@
       "updated": 1555763693,
       "created": 1555285500,
       "unread": false,
+      "last_message": "",
       "with_user": {
         "id": "test-chat-004",
         "name": "Pavel Durov",
@@ -69,6 +73,7 @@
       "updated": 1524227693,
       "created": 1555288600,
       "unread": false,
+      "last_message": "",
       "with_user": {
         "id": "test-user-005",
         "name": "Bob Ross",
@@ -85,6 +90,7 @@
       "updated": 1553344493,
       "created": 1555281200,
       "unread": true,
+      "last_message": "",
       "with_user": {
         "id": "test-user-006",
         "name": "Nikola Tesla",

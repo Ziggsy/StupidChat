@@ -1,6 +1,5 @@
 package com.upgradedsoftware.android.chat.utils;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,11 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.upgradedsoftware.android.chat.R;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;

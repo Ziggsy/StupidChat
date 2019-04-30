@@ -46,10 +46,10 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        initDataAndUI();
         initMessageList();
         initFakeRequests();
         initClickListener();
-        initDataAndUI();
     }
 
     private void initDataAndUI(){
@@ -111,7 +111,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     private void initMessageList() {
-        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, Helper.JSON_CHAT_MESSAGES);
+        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, mChatId);
     }
 
     private void initFakeRequests() {

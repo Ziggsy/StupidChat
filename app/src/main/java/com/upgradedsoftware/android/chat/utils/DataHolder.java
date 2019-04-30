@@ -1,9 +1,8 @@
 package com.upgradedsoftware.android.chat.utils;
 
-import android.provider.ContactsContract;
-
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
+import com.upgradedsoftware.android.chat.models.UserAvatars;
 import com.upgradedsoftware.android.chat.models.UserModel;
 import com.upgradedsoftware.android.chat.models.UserSettings;
 
@@ -20,7 +19,6 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UPDATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_WITH_USER;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_ID;
-import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_SETTING_WORK;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_AVATAR;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_ID;
@@ -43,13 +41,17 @@ public class DataHolder {
     private DataHolder() {
     }
 
-    public int getCounter(){ return counter;}
+    public int getCounter() {
+        return counter;
+    }
 
-    public void setCounter(){ counter++;}
+    public void setCounter() {
+        counter++;
+    }
 
     public static void saveToServerModel() throws JSONException {
         JSONArray array = new JSONArray();
-        for(int i = 0; i < DataHolder.getInstance().mContactUiModel.size();  i++){
+        for (int i = 0; i < DataHolder.getInstance().mContactUiModel.size(); i++) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(KEY_MESSAGE_ID, DataHolder.getInstance().mContactUiModel.get(i).getChatId());
             jsonObject.put(KEY_CHAT_UPDATED, DataHolder.getInstance().mContactUiModel.get(i).getUpdated());
@@ -67,7 +69,7 @@ public class DataHolder {
         userJsonObject.put(KEY_USER_ID, user.getUserId());
         userJsonObject.put(KEY_USER_NAME, user.getName());
         userJsonObject.put(KEY_USER_SETTINGS, mapUserSetting(user.getSettings()));
-        userJsonObject.put(KEY_USER_AVATAR, mapUserAvatar(user.getSettings()));
+        userJsonObject.put(KEY_USER_AVATAR, mapUserAvatar(user.getUserAvatars()));
         return userJsonObject;
     }
 
@@ -77,9 +79,9 @@ public class DataHolder {
         return settingJsonObject;
     }
 
-    private static JSONObject mapUserAvatar(UserSettings avatar) throws JSONException {
+    private static JSONObject mapUserAvatar(UserAvatars avatar) throws JSONException {
         JSONObject avatarJsonObject = new JSONObject();
-        avatarJsonObject.put(KEY_AVATAR_URL, avatar.getWork());
+        avatarJsonObject.put(KEY_AVATAR_URL, avatar.getUrl());
         return avatarJsonObject;
     }
 }

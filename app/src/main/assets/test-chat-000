@@ -1,0 +1,40 @@
+{
+  "messages": [
+    {
+      "id": "test-message-001",
+      "from_me": true,
+      "text": "Hello, Keanu",
+      "created": 1549716055
+    },
+    {
+      "id": "test-message-002",
+      "from_me": true,
+      "text": "John Wick is as always mind-blowing literary",
+      "created": 1549716065
+    },
+    {
+      "id": "test-message-003",
+      "from_me": true,
+      "text": "Now waiting for the third part? XD",
+      "created": 1549716075
+    },
+    {
+      "id": "test-message-004",
+      "from_me": false,
+      "text": "Thank you, of course.",
+      "created": 1549717060
+    },
+    {
+      "id": "test-message-005",
+      "from_me": true,
+      "text": "When?",
+      "created": 1549717080
+    },
+    {
+      "id": "test-message-006",
+      "from_me": false,
+      "text": "This is a secret :)",
+      "created": 1549717160
+    }
+  ]
+}

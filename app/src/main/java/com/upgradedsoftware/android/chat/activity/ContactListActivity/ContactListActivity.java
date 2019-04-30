@@ -103,6 +103,8 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
     @Override
     public void newDataReceived(List<ContactUiModel> data) {
+
+
         DataHolder.getInstance().mContactUiModel = data; // Якобы сохраняю в бд
 
         if (first_setup) {

@@ -84,7 +84,7 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
             case 8:
                 return generateNewChat(newData, counter);
             case 9:
-                return newData;
+                return generateNewChat(newData, counter);
         }
         return null;
     }
