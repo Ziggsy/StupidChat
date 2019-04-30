@@ -42,7 +42,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         super.onCreate(savedInstanceState);
         setContentView(ACTIVITY_LAYOUT);
         if (savedInstanceState == null) initChatList();
-        initFakeServer();
         initBottomSheet();
         initRecycler();
     }
@@ -128,6 +127,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     @Override
     protected void onResume() {
         super.onResume();
+        initFakeServer();
         if (DataHolder.getInstance().mContactUiModel != null) {
             newDataReceived(DataHolder.getInstance().mContactUiModel);
         }
