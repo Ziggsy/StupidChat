@@ -24,6 +24,8 @@ import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.List;
 

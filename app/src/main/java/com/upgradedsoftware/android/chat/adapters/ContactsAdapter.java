@@ -10,12 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.MyDiffCallback;
 import com.upgradedsoftware.android.chat.utils.TimeParser;

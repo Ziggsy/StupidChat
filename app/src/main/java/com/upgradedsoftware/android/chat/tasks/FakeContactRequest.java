@@ -27,9 +27,9 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
     @Override
     protected Void doInBackground(JSONObject... data) {
         try {
-            for (int i = 0; i < 100; i++) {
+            for (DataHolder.getInstance().getCounter(); DataHolder.getInstance().getCounter() < 100; DataHolder.getInstance().setCounter()) {
                 TimeUnit.SECONDS.sleep(5);
-                JSONObject newData = randomEvent(data[0], i);
+                JSONObject newData = randomEvent(data[0], DataHolder.getInstance().getCounter());
                 publishProgress(newData);
             }
         } catch (InterruptedException e) {

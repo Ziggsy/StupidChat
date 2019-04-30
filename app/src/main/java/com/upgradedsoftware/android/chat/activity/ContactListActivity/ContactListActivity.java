@@ -2,7 +2,6 @@ package com.upgradedsoftware.android.chat.activity.ContactListActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +18,11 @@ import com.upgradedsoftware.android.chat.utils.BottomSheetDialog;
 import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 
+import org.json.JSONException;
+
 import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
-import static com.upgradedsoftware.android.chat.utils.Helper.LIST_STATE_KEY;
 
 interface ContactListInterface {
     void newDataReceived(List<ContactUiModel> data);
@@ -36,14 +36,12 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private RecyclerView mRecyclerView;
     private boolean first_setup = true;
     private FakeContactRequest server;
-    private Parcelable mListState;
-    private RecyclerView.LayoutManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(ACTIVITY_LAYOUT);
-        initChatList();
+        if (savedInstanceState == null) initChatList();
         initFakeServer();
         initBottomSheet();
         initRecycler();
@@ -73,7 +71,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     private void initRecycler() {
         mRecyclerView = findViewById(R.id.recyclerContacts);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        this.manager = mRecyclerView.getLayoutManager();
     }
 
     private void setAdapter(List<ContactUiModel> data) {
@@ -109,8 +106,6 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     public void newDataReceived(List<ContactUiModel> data) {
         DataHolder.getInstance().mContactUiModel = data; // Якобы сохраняю в бд
 
-        final List<ContactUiModel> listChatModel = DataHolder.getInstance().mContactUiModel;
-
         if (first_setup) {
             setAdapter(data);
         } else {
@@ -129,39 +124,25 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
     }
 
-    protected void onSaveInstanceState(Bundle state) {
-        super.onSaveInstanceState(state);
-
-        // Save list state
-        Parcelable mListState = manager.onSaveInstanceState();
-        state.putParcelable(LIST_STATE_KEY, mListState);
-    }
-
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-
-        // Retrieve list state and list/item positions
-        if (state != null)
-            mListState = state.getParcelable(LIST_STATE_KEY);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        tryToRestore();
-    }
-
-    private void tryToRestore() {
-        if (mListState != null && manager != null) {
-            manager.onRestoreInstanceState(mListState);
+        if (DataHolder.getInstance().mContactUiModel != null) {
+            newDataReceived(DataHolder.getInstance().mContactUiModel);
         }
     }
+
 
     @Override
     protected void onStop() {
         server.cancel(true);
+        try {
+            DataHolder.saveToServerModel();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         super.onStop();
     }
-
 
 }

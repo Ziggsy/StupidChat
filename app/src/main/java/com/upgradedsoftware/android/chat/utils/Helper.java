@@ -1,7 +1,6 @@
 package com.upgradedsoftware.android.chat.utils;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -13,7 +12,6 @@ import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -67,24 +65,24 @@ public class Helper {
 //                e.printStackTrace();
 //            }
 //        } else {
-            try {
-                InputStream is = activity.getAssets().open(way);
-                int size = is.available();
-                byte[] buffer = new byte[size];
-                is.read(buffer);
-                is.close();
-                return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            InputStream is = activity.getAssets().open(way);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 //        }
 
         return null;
     }
 
-    public void imageLoader(View view, ImageView image, String url){
+    public void imageLoader(View view, ImageView image, String url) {
         Glide.with(view)
                 .asBitmap()
                 .load(url)
