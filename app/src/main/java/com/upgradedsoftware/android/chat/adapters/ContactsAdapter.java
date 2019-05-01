@@ -37,7 +37,6 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     public void setNewData(List<ContactUiModel> data) {
         final MyDiffCallback diffCallback = new MyDiffCallback(data, this.mData);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
         this.mData.clear();
         this.mData.addAll(data);
         diffResult.dispatchUpdatesTo(this);
@@ -72,9 +71,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.subText.setVisibility(View.VISIBLE);
             holder.subText.setTextColor(Color.parseColor("#FF868686"));
         }
-
         Helper.getInstance().imageLoader(holder, holder.userAvatar, getData().get(position).getUser().getUserAvatars().getUrl());
-
         holder.lastMessageTime.setText(TimeParser.timeParser(data.getUpdated()));
     }
 

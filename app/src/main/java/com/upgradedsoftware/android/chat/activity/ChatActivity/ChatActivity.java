@@ -16,15 +16,14 @@ import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
+import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.MessageRequestModel;
 import com.upgradedsoftware.android.chat.tasks.FakeChatRequest;
 import com.upgradedsoftware.android.chat.tasks.SendMessageRequest;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.data.DataHolderServer;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,13 +110,13 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     private void initMessageList() {
-        DataHolder.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(this, mChatId);
+        DataHolderServer.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(mChatId);
     }
 
     private void initFakeRequests() {
         serverChat = new FakeChatRequest();
         serverChat.setActivity(this);
-        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolder.getInstance().mJSONObjectMessages);
+        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().mJSONObjectMessages);
     }
 
     private void initRecycler(List<ChatUiModel> data) {
@@ -131,7 +130,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
 
     @Override
     public void newDataReceived(ArrayList<ChatUiModel> data) {
-        DataHolder.getInstance().mChatUiModel = data;
+        DataHolderApp.getInstance().mChatUiModel = data;
         if (firstSetup) {
             initRecycler(data);
         } else {

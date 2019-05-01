@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.mappers.MessageMapper;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.data.DataHolderServer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     protected Void doInBackground(JSONObject... data) {
         try {
             for (int i = 0; i < 9999; i++) {
-                publishProgress(DataHolder.getInstance().mJSONObjectMessages);
+                publishProgress(DataHolderServer.getInstance().mJSONObjectMessages);
                 TimeUnit.SECONDS.sleep(5);
             }
         } catch (InterruptedException e) {
@@ -34,7 +34,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {
-        DataHolder.getInstance().mJSONObjectMessages = values[0];
+        DataHolderServer.getInstance().mJSONObjectMessages = values[0];
         onReceive(values[0]);
         super.onProgressUpdate(values);
     }

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 
 import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.models.MessageRequestModel;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
+import com.upgradedsoftware.android.chat.data.DataHolderServer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
@@ -41,10 +40,10 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boo
         message.put(KEY_MESSAGE_FROM_ME, true);
         message.put(KEY_MESSAGE_TEXT, data[0].getTextMessage());
         message.put(KEY_MESSAGE_CREATED, data[0].getCreated());
-        JSONObject newData = DataHolder.getInstance().mJSONObjectMessages;
+        JSONObject newData = DataHolderServer.getInstance().mJSONObjectMessages;
         JSONArray messageArray = newData.getJSONArray(KEY_MESSAGE_MESSAGES);
         messageArray.put(message);
-        DataHolder.getInstance().mJSONObjectMessages = new JSONObject().put(KEY_MESSAGE_MESSAGES, messageArray);
+        DataHolderServer.getInstance().mJSONObjectMessages = new JSONObject().put(KEY_MESSAGE_MESSAGES, messageArray);
     }
 
     @Override

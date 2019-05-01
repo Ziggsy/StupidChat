@@ -7,7 +7,7 @@ import com.upgradedsoftware.android.chat.models.ContactUiModel;
 
 import java.util.List;
 
-public class MyDiffCallback extends DiffUtil.Callback{
+public class MyDiffCallback extends DiffUtil.Callback {
 
     private List<ContactUiModel> oldData;
     private List<ContactUiModel> newData;
@@ -34,7 +34,14 @@ public class MyDiffCallback extends DiffUtil.Callback{
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldData.get(oldItemPosition).equals(newData.get(newItemPosition));
+        return (oldData.get(oldItemPosition).getUnread().equals(newData.get(oldItemPosition).getUnread()) &&
+                oldData.get(oldItemPosition).getCreated().equals(newData.get(oldItemPosition).getCreated()) &&
+                oldData.get(oldItemPosition).getUpdated().equals(newData.get(oldItemPosition).getUpdated()) &&
+                oldData.get(oldItemPosition).getUser().getUserId().equals(newData.get(oldItemPosition).getUser().getUserId()) &&
+                oldData.get(oldItemPosition).getUser().getName().equals(newData.get(oldItemPosition).getUser().getName()) &&
+                oldData.get(oldItemPosition).getUser().getUserAvatars().getUrl().equals(newData.get(oldItemPosition).getUser().getUserAvatars().getUrl()) &&
+                oldData.get(oldItemPosition).getUser().getSettings().getWork().equals(newData.get(oldItemPosition).getUser().getSettings().getWork())
+        );
     }
 
     @Nullable

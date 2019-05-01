@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.upgradedsoftware.android.chat.App;
 import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 
 import org.json.JSONException;
@@ -41,6 +42,7 @@ public class Helper {
     public static final String KEY_CHAT_UPDATED = "updated";
     public static final String KEY_CHAT_CREATED = "created";
     public static final String KEY_CHAT_UNREAD = "unread";
+    public static final String KEY_CHAT_LAST_MESSAGE = "last_message";
     public static final String KEY_CHAT_WITH_USER = "with_user";
     public static final String KEY_USER_ID = "id";
     public static final String KEY_USER_NAME = "name";
@@ -54,7 +56,7 @@ public class Helper {
     private Helper() {
     }
 
-    public JSONObject initJSON(Activity activity, String way) {
+    public JSONObject initJSON(String way) {
 //        File file = new File(context.getFilesDir(), way);
 
         // Смотрим есть ли файл БД фейкового сервера на девайсе, если нет запускаем дефолтный JSON из assets
@@ -66,7 +68,7 @@ public class Helper {
 //            }
 //        } else {
         try {
-            InputStream is = activity.getAssets().open(way);
+            InputStream is = App.getContext().getAssets().open(way);
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

@@ -3,9 +3,9 @@ package com.upgradedsoftware.android.chat.tasks;
 import android.os.AsyncTask;
 
 import com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity;
+import com.upgradedsoftware.android.chat.data.DataHolderServer;
 import com.upgradedsoftware.android.chat.mappers.ChatListMapper;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
-import com.upgradedsoftware.android.chat.utils.DataHolder;
 import com.upgradedsoftware.android.chat.utils.Helper;
 
 import org.json.JSONArray;
@@ -18,18 +18,27 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_NEW_CHATTERS;
+import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_LAST_MESSAGE;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
 
-public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> {
+public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
 
     private WeakReference<ContactListActivity> mActivity;
 
     @Override
-    protected Void doInBackground(JSONObject... data) {
+    protected Void doInBackground(Void... voids) {
         try {
-            for (DataHolder.getInstance().getCounter(); DataHolder.getInstance().getCounter() < 100; DataHolder.getInstance().setCounter()) {
+            for (DataHolderServer.getInstance().getCounter(); DataHolderServer.getInstance().getCounter() < 100; DataHolderServer.getInstance().setCounter()) {
                 TimeUnit.SECONDS.sleep(5);
-                JSONObject newData = randomEvent(data[0], DataHolder.getInstance().getCounter());
+                JSONObject contactData = getContactData();
+                contactData = setUnreadStatusAndLastMessage(contactData);
+                JSONObject newData = randomEvent(contactData, DataHolderServer.getInstance().getCounter());
                 publishProgress(newData);
             }
         } catch (InterruptedException e) {
@@ -40,10 +49,18 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
         return null;
     }
 
+    private JSONObject getContactData() {
+        if(DataHolderServer.getInstance().mJSONObjectContact == null){
+            return DataHolderServer.getInstance().mJSONObjectContact = Helper.getInstance().initJSON(JSON_SERVER_RESPONSE);
+        } else {
+            return DataHolderServer.getInstance().mJSONObjectContact;
+        }
+    }
+
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {
-        DataHolder.getInstance().mJSONObjectContact = values[0];
+        DataHolderServer.getInstance().mJSONObjectContact = values[0];
         onReceive(values[0]);
         super.onProgressUpdate(values);
     }
@@ -89,8 +106,33 @@ public class FakeContactRequest extends AsyncTask<JSONObject, JSONObject, Void> 
         return null;
     }
 
+    private JSONObject setUnreadStatusAndLastMessage(JSONObject contactData) throws JSONException {
+        JSONArray chatsArray = contactData.getJSONArray(KEY_CHAT_CHATS);
+        JSONArray newChatsArray = new JSONArray();
+        for (int i = 0; i < chatsArray.length(); i++){
+            //Достаём объект чата
+            JSONObject chatObject = (JSONObject)chatsArray.get(i);
+            String chatID = (String) chatObject.get(KEY_CHAT_ID);
+            //Достаём чат
+            JSONArray messagesObject = DataHolderServer.getInstance().getMessagesFormChat(chatID).getJSONArray(KEY_MESSAGE_MESSAGES);
+            //Достаём последнюю месагу
+            JSONObject lastMessageInChat = (JSONObject) messagesObject.get(messagesObject.length() - 1);
+            //Меняем поля в JSON'e контакта
+            if (lastMessageInChat.get(KEY_MESSAGE_FROM_ME).equals(true)){
+                chatObject.put(KEY_CHAT_UNREAD, false);
+            } else {
+                // Будем считать, если последнее сообщение не от нас, то оно не прочитано
+                // TODO Сделать так, чтобы после захода в окно чата, ставился флаг unread = false
+                chatObject.put(KEY_CHAT_UNREAD, true);
+            }
+            chatObject.put(KEY_CHAT_LAST_MESSAGE, lastMessageInChat.get(KEY_MESSAGE_TEXT));
+            newChatsArray.put(chatObject);
+        }
+        return new JSONObject().put(KEY_CHAT_CHATS, newChatsArray);
+    }
+
     private JSONObject generateNewChat(JSONObject newData, int counter) throws JSONException {
-        JSONObject newChat = Helper.getInstance().initJSON(mActivity.get(), JSON_NEW_CHATTERS);
+        JSONObject newChat = Helper.getInstance().initJSON(JSON_NEW_CHATTERS);
         JSONArray chatsArray = newChat.getJSONArray(KEY_CHAT_CHATS);
         if (counter < chatsArray.length()) {
             JSONObject jsonObject = chatsArray.getJSONObject(counter);
