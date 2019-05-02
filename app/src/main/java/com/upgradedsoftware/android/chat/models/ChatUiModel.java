@@ -43,5 +43,9 @@ public class ChatUiModel {
     public Integer getMessageStatus() {
         return mMessageStatus;
     }
+
+    public void setMessageStatus(int status) {
+        mMessageStatus = status;
+    }
 }
 

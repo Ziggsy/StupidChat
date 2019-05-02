@@ -1,10 +1,13 @@
 package com.upgradedsoftware.android.chat.adapters;
 
+import android.graphics.drawable.TransitionDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
@@ -98,19 +101,44 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private TextView message;
         private TextView time;
+        private RelativeLayout root;
+        private ProgressBar progressBar;
 
         ViewHolderFromMe(View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.message);
             time = itemView.findViewById(R.id.time);
+            root = itemView.findViewById(R.id.root);
+            progressBar = itemView.findViewById(R.id.progressBar);
         }
 
         void bind(ChatUiModel item) {
             message.setText(item.getTextMessage());
             time.setText(TimeParser.parseInDay(item.getCreated()));
 
-            if(item.getMessageStatus() == MessageStatus.MESSAGE_ERROR){
-                itemView.setBackground(null);
+            //TODO Криво работает анимация, если написать много сообщений то совсем хгабелла
+            switch (item.getMessageStatus()){
+                case MessageStatus.MESSAGE_CACHED: {
+                    time.setVisibility(View.INVISIBLE);
+                    progressBar.setVisibility(View.VISIBLE);
+                    root.setBackgroundResource(R.drawable.rounded_corner_from_you_cached_0);
+                    return;
+                }
+                case MessageStatus.MESSAGE_CACHED_SAVED:{
+                    progressBar.setVisibility(View.GONE);
+                    time.setVisibility(View.VISIBLE);
+                    root.setBackgroundResource(R.drawable.animation_message);
+                    TransitionDrawable transition = (TransitionDrawable) root.getBackground();
+                    transition.startTransition(500);
+                    item.setMessageStatus(MessageStatus.MESSAGE_OK);
+                    return;
+                }
+                default:{
+                    time.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    root.setBackgroundResource(R.drawable.rounded_corner_from_you);
+                    return;
+                }
             }
         }
 

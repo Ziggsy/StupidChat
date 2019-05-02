@@ -3,15 +3,12 @@ package com.upgradedsoftware.android.chat.tasks;
 import android.os.AsyncTask;
 
 import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
-import com.upgradedsoftware.android.chat.mappers.MessageMapper;
-import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
@@ -41,8 +38,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
     private void onReceive(JSONObject json) {
         try {
-            ArrayList<ChatUiModel> object = MessageMapper.mapToUI(json);
-            mActivity.get().newDataReceived(object);
+            mActivity.get().newDataReceived(json);
         } catch (JSONException e) {
             e.printStackTrace();
         }

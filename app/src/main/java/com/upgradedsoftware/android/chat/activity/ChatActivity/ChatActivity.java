@@ -17,20 +17,25 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
 import com.upgradedsoftware.android.chat.data.DataHolderApp;
+import com.upgradedsoftware.android.chat.mappers.MessageMapper;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.MessageRequestModel;
+import com.upgradedsoftware.android.chat.models.MessageStatus;
 import com.upgradedsoftware.android.chat.tasks.FakeChatRequest;
 import com.upgradedsoftware.android.chat.tasks.SendMessageRequest;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 interface ChatActivityInterface {
 
-    void newDataReceived(ArrayList<ChatUiModel> object);
+    void newDataReceived(JSONObject object) throws JSONException;
 }
 
 public class ChatActivity extends AppCompatActivity implements ChatActivityInterface {
@@ -40,6 +45,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private RecyclerView recyclerView;
     private FakeChatRequest serverChat;
     private String mChatId;
+    private ArrayList<ChatUiModel> messageData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,9 +115,23 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     private void sendMessageToServer(MessageRequestModel messageRequestModel) {
+        cacheMessage(messageRequestModel);
         SendMessageRequest messageRequest = new SendMessageRequest();
         messageRequest.setActivity(this);
         messageRequest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, messageRequestModel);
+    }
+
+    private void cacheMessage(MessageRequestModel messageRequestModel) {
+        DataHolderApp.getInstance().saveCachedMessage(
+                new ChatUiModel(
+                        "",
+                        true,
+                        messageRequestModel.getTextMessage(),
+                        messageRequestModel.getCreated(),
+                        MessageStatus.MESSAGE_CACHED
+                ), mChatId
+        );
+        updateAdapterData();
     }
 
     private void initMessageList() {
@@ -134,14 +154,38 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     @Override
-    public void newDataReceived(ArrayList<ChatUiModel> data) {
-        DataHolderApp.getInstance().mChatUiModel = data;
+    public void newDataReceived(JSONObject object) throws JSONException {
+        this.messageData = MessageMapper.mapToUI(object);
+        DataHolderApp.getInstance().mChatUiMap.put(mChatId, messageData);
+        updateAdapterData();
+    }
+
+    private void updateAdapterData() {
         if (firstSetup) {
-            initRecycler(data);
+            initRecycler(messageData);
         } else {
-            adapter.setNewData(data);
+            checkCache();
+            adapter.setNewData(messageData);
             adapter.notifyDataSetChanged();
             this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
+        }
+    }
+
+    private void checkCache() {
+        List<ChatUiModel> cachedData = DataHolderApp.getInstance().getCachedData(mChatId);
+        if (!cachedData.isEmpty()){
+            for (int i = 0; i < messageData.size(); i++){
+                for (int j = 0; j < cachedData.size(); j++){
+                    if(messageData.get(i).getTextMessage().equals(cachedData.get(j).getTextMessage())){
+                        cachedData.remove(j);
+                        ChatUiModel element = messageData.get(i);
+                        element.setMessageStatus(MessageStatus.MESSAGE_CACHED_SAVED);
+                        messageData.remove(i);
+                        messageData.add(element);
+                    }
+                }
+            }
+            messageData.addAll(cachedData);
         }
     }
 

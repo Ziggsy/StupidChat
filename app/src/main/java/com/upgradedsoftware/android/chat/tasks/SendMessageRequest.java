@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
@@ -26,8 +27,9 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boo
     @Override
     protected Boolean doInBackground(MessageRequestModel... data) {
         try {
+            TimeUnit.SECONDS.sleep(5);
             saveToServerBD(data);
-        } catch (JSONException e) {
+        } catch (JSONException | InterruptedException e) {
             e.printStackTrace();
         }
 
