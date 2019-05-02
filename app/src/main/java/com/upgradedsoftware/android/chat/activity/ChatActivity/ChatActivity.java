@@ -51,13 +51,18 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         initClickListener();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     private void initDataAndUI(){
         Bundle bundle = getIntent().getExtras();
         TextView view = findViewById(R.id.userName);
         if (bundle != null) {
             view.setText(bundle.getString("name"));
             ImageView imageView = findViewById(R.id.userAvatar);
-            Helper.getInstance().imageLoader(view, imageView, bundle.getString("url"));
+            Helper.getInstance().imageLoader(imageView, bundle.getString("url"));
             mChatId = bundle.getString("chatID");
         }
     }

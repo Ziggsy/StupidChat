@@ -63,15 +63,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
         if (data.getUnread()) {
             holder.unreadStatus.setVisibility(View.VISIBLE);
             holder.subText.setVisibility(View.VISIBLE);
-            holder.subText.setText(R.string.default_unread);
-            holder.subText.setTextColor(Color.parseColor("#FF57A5A0"));
+            holder.subText.setText(data.getLastMessage());
+            holder.subText.setTextColor(Color.parseColor("#FF57A5A0")); //TODO Теперь есть app class, надо сделать по человечески
         } else {
             holder.unreadStatus.setVisibility(View.INVISIBLE);
-            holder.subText.setText(R.string.default_read);
+            holder.subText.setText("You: " + data.getLastMessage());
             holder.subText.setVisibility(View.VISIBLE);
-            holder.subText.setTextColor(Color.parseColor("#FF868686"));
+            holder.subText.setTextColor(Color.parseColor("#FF868686")); //TODO Теперь есть app class, надо сделать по человечески
         }
-        Helper.getInstance().imageLoader(holder, holder.userAvatar, getData().get(position).getUser().getUserAvatars().getUrl());
+        Helper.getInstance().imageLoader(holder.userAvatar, getData().get(position).getUser().getUserAvatars().getUrl());
         holder.lastMessageTime.setText(TimeParser.timeParser(data.getUpdated()));
     }
 

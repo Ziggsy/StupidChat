@@ -32,7 +32,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         if (id.isEmpty() && userName.isEmpty()) {
             ImageView viewAvatar = getView().findViewById(R.id.myAvatar);
-            Helper.getInstance().imageLoader(getView(), viewAvatar, URL_MY_AVATAR);
+            Helper.getInstance().imageLoader(viewAvatar, URL_MY_AVATAR);
         } else {
             loadUser();
         }
@@ -44,7 +44,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         TextView info = getView().findViewById(R.id.mySubString);
         info.setText(userInfo);
         ImageView viewAvatar = getView().findViewById(R.id.myAvatar);
-        Helper.getInstance().imageLoader(getView(), viewAvatar, url);
+        Helper.getInstance().imageLoader(viewAvatar, url);
     }
 
 }

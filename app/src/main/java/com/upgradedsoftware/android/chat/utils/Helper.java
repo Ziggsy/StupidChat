@@ -84,17 +84,8 @@ public class Helper {
         return null;
     }
 
-    public void imageLoader(View view, ImageView image, String url) {
-        Glide.with(view)
-                .asBitmap()
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .apply(RequestOptions.circleCropTransform())
-                .into(image);
-    }
-
-    public void imageLoader(ContactsAdapter.ViewHolder holder, ImageView image, String url) {
-        Glide.with(holder.itemView)
+    public void imageLoader(ImageView image, String url) {
+        Glide.with(App.getContext())
                 .asBitmap()
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)

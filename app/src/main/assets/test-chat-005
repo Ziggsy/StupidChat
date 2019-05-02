@@ -50,7 +50,7 @@
     },
     {
       "id": "test-message-009",
-      "from_me": false,
+      "from_me": true,
       "text": "Wanna call a taxi later?",
       "created": 1555700996
     }

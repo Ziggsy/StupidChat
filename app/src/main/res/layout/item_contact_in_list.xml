@@ -59,6 +59,7 @@
         android:layout_below="@id/readTime"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_round_fiber_manual_record" />
 
 </RelativeLayout>

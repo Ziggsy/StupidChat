@@ -9,13 +9,15 @@ public class ContactUiModel implements Comparable, Parcelable {
     private Long created;
     private Boolean unread;
     private UserModel user;
+    private String lastMessage;
 
-    public ContactUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user) {
+    public ContactUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user, String lastMessage) {
         this.chatId = chatId;
         this.updated = updated;
         this.created = created;
         this.unread = unread;
         this.user = user;
+        this.lastMessage = lastMessage;
     }
 
     protected ContactUiModel(Parcel in) {
@@ -32,6 +34,7 @@ public class ContactUiModel implements Comparable, Parcelable {
         }
         byte tmpUnread = in.readByte();
         unread = tmpUnread == 0 ? null : tmpUnread == 1;
+        lastMessage = in.readString();
     }
 
     public static final Creator<ContactUiModel> CREATOR = new Creator<ContactUiModel>() {
@@ -66,6 +69,10 @@ public class ContactUiModel implements Comparable, Parcelable {
         return user;
     }
 
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
     @Override
     public int compareTo(Object object) {
         Long compareUpdated = ((ContactUiModel) object).getUpdated();
@@ -94,6 +101,7 @@ public class ContactUiModel implements Comparable, Parcelable {
             dest.writeLong(created);
         }
         dest.writeByte((byte) (unread == null ? 0 : unread ? 1 : 2));
+        dest.writeString(lastMessage);
     }
 }
 

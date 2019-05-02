@@ -2,10 +2,12 @@ package com.upgradedsoftware.android.chat.activity.ContactListActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.upgradedsoftware.android.chat.R;
@@ -13,18 +15,23 @@ import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
+import com.upgradedsoftware.android.chat.mappers.ChatListMapper;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.models.UserModelShort;
 import com.upgradedsoftware.android.chat.tasks.FakeContactRequest;
 import com.upgradedsoftware.android.chat.utils.BottomSheetDialog;
+import com.upgradedsoftware.android.chat.utils.Helper;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
+
 interface ContactListInterface {
-    void newDataReceived(List<ContactUiModel> data);
+    void newDataReceived(JSONObject data);
 }
 
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
@@ -47,6 +54,7 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         initFakeServer();
         initBottomSheet();
         initRecycler();
+        initMyAvatar();
     }
 
     private void initFakeServer() {
@@ -70,6 +78,11 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         mRecyclerView = findViewById(R.id.recyclerContacts);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         setAdapter(DataHolderApp.getInstance().getContactUiModel());
+    }
+
+    private void initMyAvatar() {
+        ImageView myAvatar = findViewById(R.id.menu);
+        Helper.getInstance().imageLoader(myAvatar, URL_MY_AVATAR);
     }
 
     private void setAdapter(List<ContactUiModel> data) {
@@ -108,9 +121,14 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     }
 
     @Override
-    public void newDataReceived(List<ContactUiModel> data) {
-        DataHolderApp.getInstance().setContactUiModel(data); // Якобы сохраняю в бд
-        adapter.setNewData(data);
+    public void newDataReceived(JSONObject data) {
+        try {
+            ArrayList<ContactUiModel> dataUI = ChatListMapper.mapToUI(data);
+            DataHolderApp.getInstance().setContactUiModel(dataUI); // Якобы сохраняю в бд
+            adapter.setNewData(DataHolderApp.getInstance().getContactUiModel());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 

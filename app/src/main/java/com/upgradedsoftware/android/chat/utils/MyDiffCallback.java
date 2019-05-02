@@ -37,6 +37,7 @@ public class MyDiffCallback extends DiffUtil.Callback {
         return (oldData.get(oldItemPosition).getUnread().equals(newData.get(oldItemPosition).getUnread()) &&
                 oldData.get(oldItemPosition).getCreated().equals(newData.get(oldItemPosition).getCreated()) &&
                 oldData.get(oldItemPosition).getUpdated().equals(newData.get(oldItemPosition).getUpdated()) &&
+                oldData.get(oldItemPosition).getLastMessage().equals(newData.get(oldItemPosition).getLastMessage()) &&
                 oldData.get(oldItemPosition).getUser().getUserId().equals(newData.get(oldItemPosition).getUser().getUserId()) &&
                 oldData.get(oldItemPosition).getUser().getName().equals(newData.get(oldItemPosition).getUser().getName()) &&
                 oldData.get(oldItemPosition).getUser().getUserAvatars().getUrl().equals(newData.get(oldItemPosition).getUser().getUserAvatars().getUrl()) &&

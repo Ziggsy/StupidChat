@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -49,13 +48,8 @@ public class DataHolderServer {
         counter++;
     }
 
-    public Map<String, JSONObject> getMessagesMap() throws JSONException {
-        if (messagesMap == null) messagesMap = initMessagesMap();
-        return messagesMap;
-    }
-
-    private HashMap<String, JSONObject> initMessagesMap() throws JSONException {
-        HashMap<String, JSONObject> newMap = new HashMap<String, JSONObject>();
+    private void initMessagesMap() throws JSONException {
+        HashMap<String, JSONObject> newMap = new HashMap<>();
         JSONArray chatsArray = mJSONObjectContact.getJSONArray(KEY_CHAT_CHATS);
         for (int i = 0; i < chatsArray.length(); i++){
             JSONObject chat = (JSONObject) chatsArray.get(i);
@@ -63,7 +57,6 @@ public class DataHolderServer {
             newMap.put(chatID, Helper.getInstance().initJSON(chatID));
         }
         messagesMap = newMap;
-        return messagesMap;
     }
 
     public JSONObject getMessagesFormChat(String chatID) throws JSONException {

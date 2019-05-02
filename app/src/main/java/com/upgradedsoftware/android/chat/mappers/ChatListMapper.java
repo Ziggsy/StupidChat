@@ -16,6 +16,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_LAST_MESSAGE;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UPDATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_WITH_USER;
@@ -43,7 +44,8 @@ public class ChatListMapper {
                     jsonElement.getLong(KEY_CHAT_UPDATED),
                     jsonElement.getLong(KEY_CHAT_CREATED),
                     jsonElement.getBoolean(KEY_CHAT_UNREAD),
-                    parseUser(jsonElement.getJSONObject(KEY_CHAT_WITH_USER))
+                    parseUser(jsonElement.getJSONObject(KEY_CHAT_WITH_USER)),
+                    jsonElement.getString(KEY_CHAT_LAST_MESSAGE)
             );
             list.add(element);
         }
