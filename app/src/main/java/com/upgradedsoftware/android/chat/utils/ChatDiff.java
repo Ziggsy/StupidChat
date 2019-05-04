@@ -4,7 +4,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
-import com.upgradedsoftware.android.chat.models.ContactUiModel;
 
 import java.util.List;
 
@@ -30,24 +29,18 @@ public class ChatDiff extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return (oldData.get(oldItemPosition).getMessageID().equals(newData.get(newItemPosition).getMessageID()) &&
-        oldData.get(oldItemPosition).getMessageStatus().equals(newData.get(newItemPosition).getMessageStatus())
-        );
+        return (oldData.get(oldItemPosition).getMessageID().equals(newData.get(newItemPosition).getMessageID()));
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        try {
-            return
-                    (oldData.get(oldItemPosition).getFromMe().equals(newData.get(oldItemPosition).getFromMe()) &&
-                            oldData.get(oldItemPosition).getCreated().equals(newData.get(oldItemPosition).getCreated()) &&
-                            oldData.get(oldItemPosition).getTextMessage().equals(newData.get(oldItemPosition).getTextMessage())
-                    );
-        }
-        catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
-            return false;
-        }
+        return (oldData.get(oldItemPosition).getFromMe().equals(newData.get(oldItemPosition).getFromMe()) &&
+                        oldData.get(oldItemPosition).getCreated().equals(newData.get(oldItemPosition).getCreated()) &&
+                        oldData.get(oldItemPosition).getTextMessage().equals(newData.get(oldItemPosition).getTextMessage()) &&
+                        oldData.get(oldItemPosition).getMessageStatus().equals(newData.get(oldItemPosition).getMessageStatus())
+                );
+
+
     }
 
     @Nullable

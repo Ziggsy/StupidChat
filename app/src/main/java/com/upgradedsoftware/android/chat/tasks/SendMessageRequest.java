@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
@@ -38,7 +37,7 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boo
 
     private void saveToServerBD(MessageRequestModel[] data) throws JSONException {
         JSONObject message = new JSONObject();
-        message.put(KEY_MESSAGE_ID, UUID.randomUUID().toString());
+        message.put(KEY_MESSAGE_ID, data[0].getMessageID());
         message.put(KEY_MESSAGE_FROM_ME, true);
         message.put(KEY_MESSAGE_TEXT, data[0].getTextMessage());
         message.put(KEY_MESSAGE_CREATED, data[0].getCreated());

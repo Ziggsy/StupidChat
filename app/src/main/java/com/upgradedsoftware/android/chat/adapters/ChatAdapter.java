@@ -2,6 +2,7 @@ package com.upgradedsoftware.android.chat.adapters;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ItemViewType;
 import com.upgradedsoftware.android.chat.models.MessageStatus;
+import com.upgradedsoftware.android.chat.utils.ChatDiff;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.ArrayList;
@@ -29,19 +31,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         cacheData.add(element);
     }
 
-    public List<ChatUiModel> getListToSave(){
-        mData.removeAll(cacheData);
-        return mData;
-    }
-
     public void setNewData(List<ChatUiModel> data) {
-//        final ChatDiff diffCallback = new ChatDiff(data, this.mData);
-//        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-//        this.mData.clear();
-//        this.mData.addAll(data);
-//        diffResult.dispatchUpdatesTo(this);
-
-
         List<ChatUiModel> temp = new ArrayList<>(data);
         if(!cacheData.isEmpty()){
             for (int i = 0; i < data.size(); i++){
@@ -55,7 +45,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             temp.addAll(cacheData);
         }
         this.mData = temp;
-
     }
 
     public ChatAdapter(List<ChatUiModel> data) {

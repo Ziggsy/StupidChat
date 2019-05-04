@@ -30,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.UUID;
 
 interface ChatActivityInterface {
     String getChatId();
@@ -92,12 +93,13 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                recyclerView.smoothScrollToPosition(adapter.getItemCount());
                     }
-                }, 200);
+                }, 100);
                 return false;
             }
         });
+
 
         imageSendMessage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +107,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
                 EditText editText = findViewById(R.id.messageEntry);
                 if (!editText.getText().toString().equals("")) {
                     MessageRequestModel message = new MessageRequestModel(
-                            mChatId,
+                            UUID.randomUUID().toString(),
                             editText.getText().toString(),
                             TimeParser.getCurrentTime()
                     );
@@ -126,7 +128,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private void cacheMessage(MessageRequestModel messageRequestModel) {
         adapter.addToCache(
                 new ChatUiModel(
-                        "",
+                        messageRequestModel.getMessageID(),
                         true,
                         messageRequestModel.getTextMessage(),
                         messageRequestModel.getCreated(),
