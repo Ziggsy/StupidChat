@@ -12,11 +12,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
-import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ItemViewType;
 import com.upgradedsoftware.android.chat.models.MessageStatus;
 import com.upgradedsoftware.android.chat.utils.ChatDiff;
+import com.upgradedsoftware.android.chat.utils.SoundMaster;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.ArrayList;
@@ -24,8 +24,8 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ChatUiModel> mData;
-    private List<ChatUiModel> cacheData = new ArrayList<>();
+    private final List<ChatUiModel> mData;
+    private final List<ChatUiModel> cacheData = new ArrayList<>();
 
     public void addToCache(ChatUiModel element) {
         cacheData.add(element);
@@ -33,18 +33,33 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void setNewData(List<ChatUiModel> data) {
         List<ChatUiModel> temp = new ArrayList<>(data);
-        if(!cacheData.isEmpty()){
-            for (int i = 0; i < data.size(); i++){
+
+        // Если кэш пуст, идём сразу к DiffUtil <3
+        if (!cacheData.isEmpty()) {
+
+            // Находим элемент, который прокэширован локально, но имеет статус MESSAGE_OK
+            // Если таковой имеется, то удаляем его из локального кэша и ставим ему статус MESSAGE_CACHED_SAVED
+            // Для того, чтобы заюзать UI эффекты
+
+            for (int i = 0; i < data.size(); i++) {
                 for (int j = 0; j < cacheData.size(); j++) {
-                    if(data.get(i).getTextMessage().equals(cacheData.get(j).getTextMessage()) && !data.get(i).getMessageStatus().equals(cacheData.get(j).getMessageStatus())){
+                    if (data.get(i).getTextMessage().equals(cacheData.get(j).getTextMessage()) &&
+                            data.get(i).getMessageStatus() != (cacheData.get(j).getMessageStatus()) &&
+                            data.get(i).getMessageID().equals(cacheData.get(j).getMessageID())) {
                         cacheData.remove(j);
                         temp.get(i).setMessageStatus(MessageStatus.MESSAGE_CACHED_SAVED);
+                        break;
                     }
                 }
             }
             temp.addAll(cacheData);
         }
-        this.mData = temp;
+
+        final ChatDiff diffCallback = new ChatDiff(temp, this.mData);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        this.mData.clear();
+        this.mData.addAll(temp);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public ChatAdapter(List<ChatUiModel> data) {
@@ -56,42 +71,36 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         LayoutInflater mInflater;
-        switch (viewType) {
-            case ItemViewType.FOR: {
-                mInflater = LayoutInflater.from(viewGroup.getContext());
-                View view = mInflater.inflate((R.layout.item_message_for_user), viewGroup, false);
-                return new ViewHolderForMe(view);
-            }
-            case ItemViewType.FROM: {
-                mInflater = LayoutInflater.from(viewGroup.getContext());
-                View view = mInflater.inflate((R.layout.item_message_from_user), viewGroup, false);
-                return new ViewHolderFromMe(view);
-            }
+        if (viewType == ItemViewType.FOR) {
+            mInflater = LayoutInflater.from(viewGroup.getContext());
+            View view = mInflater.inflate((R.layout.item_message_for_user), viewGroup, false);
+            return new ViewHolderForMe(view);
+        } else {
+            mInflater = LayoutInflater.from(viewGroup.getContext());
+            View view = mInflater.inflate((R.layout.item_message_from_user), viewGroup, false);
+            return new ViewHolderFromMe(view);
         }
-        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-        switch (viewHolder.getItemViewType()) {
-            case ItemViewType.FOR: {
-                ViewHolderForMe viewHolderForMe = (ViewHolderForMe) viewHolder;
-                viewHolderForMe.bind(mData.get(position));
-                break;
-            }
-            case ItemViewType.FROM: {
-                ViewHolderFromMe viewHolderFromMe = (ViewHolderFromMe) viewHolder;
-                viewHolderFromMe.bind(mData.get(position));
-                break;
-            }
+        if (viewHolder.getItemViewType() == ItemViewType.FOR) {
+            ViewHolderForMe viewHolderForMe = (ViewHolderForMe) viewHolder;
+            viewHolderForMe.bind(mData.get(position));
+
+        } else {
+            ViewHolderFromMe viewHolderFromMe = (ViewHolderFromMe) viewHolder;
+            viewHolderFromMe.bind(mData.get(position));
+
         }
     }
 
-
     @Override
     public int getItemViewType(int position) {
-        if (mData.get(position).getFromMe()) return ItemViewType.FROM;
-        else return ItemViewType.FOR;
+        if (mData.get(position).getFromMe())
+            return ItemViewType.FROM;
+        else
+            return ItemViewType.FOR;
     }
 
 
@@ -102,8 +111,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ViewHolderForMe extends RecyclerView.ViewHolder {
 
-        private TextView message;
-        private TextView time;
+        private final TextView message;
+        private final TextView time;
 
         ViewHolderForMe(View itemView) {
             super(itemView);
@@ -120,10 +129,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ViewHolderFromMe extends RecyclerView.ViewHolder {
 
-        private TextView message;
-        private TextView time;
-        private RelativeLayout root;
-        private ProgressBar progressBar;
+        private final TextView message;
+        private final TextView time;
+        private final RelativeLayout root;
+        private final ProgressBar progressBar;
 
         ViewHolderFromMe(View itemView) {
             super(itemView);
@@ -137,39 +146,46 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             message.setText(item.getTextMessage());
             time.setText(TimeParser.parseInDay(item.getCreated()));
 
+            switch (item.getMessageStatus()) {
+                case MessageStatus.MESSAGE_CACHED:
+                    setMessageCachedUI();
+                    break;
+                case MessageStatus.MESSAGE_CACHED_SAVED:
+                    setMessageCachedSavedUI();
+                    break;
+                default:
+                    setDefaultUI();
+                    break;
+            }
+
+        }
+
+        private void setMessageCachedUI() {
+            time.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+            root.setBackgroundResource(R.drawable.rounded_corner_from_you_cached_saved);
+        }
+
+        private void setMessageCachedSavedUI() {
+            progressBar.setVisibility(View.GONE);
+            time.setVisibility(View.VISIBLE);
+            doAnimate();
+            SoundMaster.getInstance().playNotification();
+        }
+
+        private void doAnimate() {
+            AnimationDrawable anim;
+            root.setBackgroundResource(R.drawable.animation_message);
+            anim = (AnimationDrawable) root.getBackground();
+            anim.setEnterFadeDuration(250);
+            anim.setExitFadeDuration(100000);
+            anim.start();
+        }
+
+        private void setDefaultUI() {
             time.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.INVISIBLE);
             root.setBackgroundResource(R.drawable.rounded_corner_from_you);
-
-            switch (item.getMessageStatus()){
-                case MessageStatus.MESSAGE_CACHED: {
-                    time.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
-                    root.setBackgroundResource(R.drawable.rounded_corner_from_you_cached_saved);
-                    return;
-                }
-                case MessageStatus.MESSAGE_CACHED_SAVED:{
-                    progressBar.setVisibility(View.GONE);
-                    time.setVisibility(View.VISIBLE);
-
-                    AnimationDrawable anim;
-                    root.setBackgroundResource(R.drawable.animation_message);
-                    anim = (AnimationDrawable) root.getBackground();
-                    anim.setEnterFadeDuration(250);
-                    anim.setExitFadeDuration(100000);
-                    anim.start();
-
-
-                    item.setMessageStatus(MessageStatus.MESSAGE_OK);
-                    return;
-                }
-                default:{
-                    time.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
-                    root.setBackgroundResource(R.drawable.rounded_corner_from_you);
-                }
-            }
         }
-
     }
 }

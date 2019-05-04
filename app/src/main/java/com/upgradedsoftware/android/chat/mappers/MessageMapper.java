@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
@@ -17,7 +18,10 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
 
 public class MessageMapper {
 
-    static public ArrayList<ChatUiModel> mapToUI(JSONObject response) throws JSONException {
+    private MessageMapper() {
+    }
+
+    public static List<ChatUiModel> mapToUI(JSONObject response) throws JSONException {
 
         ArrayList<ChatUiModel> list = new ArrayList<>();
 
@@ -36,4 +40,5 @@ public class MessageMapper {
 
         return list;
     }
+
 }

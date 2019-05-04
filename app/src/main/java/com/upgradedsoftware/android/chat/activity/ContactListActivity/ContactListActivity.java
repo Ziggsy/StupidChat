@@ -2,10 +2,10 @@ package com.upgradedsoftware.android.chat.activity.ContactListActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,9 +25,10 @@ import com.upgradedsoftware.android.chat.utils.Helper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.BOTTOM_SHEET_TAG;
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_JSON_EXCEPTION;
 import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
 
 interface ContactListInterface {
@@ -36,11 +37,31 @@ interface ContactListInterface {
 
 public class ContactListActivity extends AppCompatActivity implements ContactListInterface {
 
-    private static final Integer ACTIVITY_LAYOUT = R.layout.activity_main;
+    private static final int ACTIVITY_LAYOUT = R.layout.activity_main;
+
+    public static class Key {
+        private Key() {
+        }
+
+        public static final String BUNDLE_NAME = "bundle.name";
+        public static final String BUNDLE_URL = "bundle.url";
+        public static final String BUNDLE_CHAT_ID = "bundle.chat.id";
+    }
 
     private ContactsAdapter adapter;
     private RecyclerView mRecyclerView;
     private FakeContactRequest server;
+
+    @Override
+    public void newDataReceived(JSONObject data) {
+        try {
+            List<ContactUiModel> dataUI = ChatListMapper.mapToUI(data);
+            DataHolderApp.getInstance().setContactUiModel(dataUI); // Якобы сохраняю в бд
+            adapter.setNewData(DataHolderApp.getInstance().getContactUiModel());
+        } catch (JSONException e) {
+            Log.e(ERROR_TAG_JSON_EXCEPTION, e.getMessage());
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +74,22 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
         super.onResume();
         initFakeServer();
         initBottomSheet();
-        initRecycler();
         initMyAvatar();
+        initRecycler();
     }
+
+    @Override
+    protected void onStop() {
+        server.cancel(true);
+        try {
+            // Активити не должна трогать DataHolderServer, нужна прослойка
+            DataHolderServer.saveToServerModel();
+        } catch (JSONException e) {
+            Log.e(ERROR_TAG_JSON_EXCEPTION, e.getMessage());
+        }
+        super.onStop();
+    }
+
 
     private void initFakeServer() {
         server = new FakeContactRequest();
@@ -69,20 +103,20 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             @Override
             public void onClick(View v) {
                 BottomSheetDialog bottomSheet = new BottomSheetDialog();
-                bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
+                bottomSheet.show(getSupportFragmentManager(), BOTTOM_SHEET_TAG);
             }
         });
+    }
+
+    private void initMyAvatar() {
+        ImageView myAvatar = findViewById(R.id.menu);
+        Helper.getInstance().imageLoader(myAvatar, URL_MY_AVATAR);
     }
 
     private void initRecycler() {
         mRecyclerView = findViewById(R.id.recyclerContacts);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         setAdapter(DataHolderApp.getInstance().getContactUiModel());
-    }
-
-    private void initMyAvatar() {
-        ImageView myAvatar = findViewById(R.id.menu);
-        Helper.getInstance().imageLoader(myAvatar, URL_MY_AVATAR);
     }
 
     private void setAdapter(List<ContactUiModel> data) {
@@ -112,45 +146,22 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
-                intent.putExtra("url", adapter.getData().get(position).getUser().getUserAvatars().getUrl());
-                intent.putExtra("chatID", adapter.getData().get(position).getChatId());
-                intent.putExtra("name", adapter.getData().get(position).getUser().getName());
+                intent.putExtra(Key.BUNDLE_URL, adapter.getData().get(position).getUser().getUserAvatars().getUrl());
+                intent.putExtra(Key.BUNDLE_CHAT_ID, adapter.getData().get(position).getChatId());
+                intent.putExtra(Key.BUNDLE_NAME, adapter.getData().get(position).getUser().getName());
                 ContactListActivity.this.startActivity(intent);
             }
         };
     }
 
-    @Override
-    public void newDataReceived(JSONObject data) {
-        try {
-            ArrayList<ContactUiModel> dataUI = ChatListMapper.mapToUI(data);
-            DataHolderApp.getInstance().setContactUiModel(dataUI); // Якобы сохраняю в бд
-            adapter.setNewData(DataHolderApp.getInstance().getContactUiModel());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
-
-    public void showBottomSheet(UserModelShort model) {
+    private void showBottomSheet(UserModelShort model) {
         BottomSheetDialog bottomSheet = new BottomSheetDialog();
-        bottomSheet.id = model.getUserInfo();
-        bottomSheet.userName = model.getName();
-        bottomSheet.userInfo = model.getUserInfo();
-        bottomSheet.url = model.getUrl();
-        bottomSheet.show(getSupportFragmentManager(), "exampleBottomSheet");
-    }
-
-    @Override
-    protected void onStop() {
-        server.cancel(true);
-        try {
-            // Todo: Активити не должна трогать DataHolderServer, нужна прослойка
-            DataHolderServer.saveToServerModel();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        super.onStop();
+        bottomSheet.setId(model.getUserInfo());
+        bottomSheet.setUserName(model.getName());
+        bottomSheet.setUserInfo(model.getUserInfo());
+        bottomSheet.setUrl(model.getUrl());
+        bottomSheet.show(getSupportFragmentManager(), BOTTOM_SHEET_TAG);
     }
 
 }

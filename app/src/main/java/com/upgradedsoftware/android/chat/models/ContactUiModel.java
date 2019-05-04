@@ -2,16 +2,17 @@ package com.upgradedsoftware.android.chat.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
-public class ContactUiModel implements Comparable, Parcelable {
-    private String chatId;
-    private Long updated;
-    private Long created;
-    private Boolean unread;
+public class ContactUiModel implements Comparable<ContactUiModel>, Parcelable {
+    private final String chatId;
+    private final long updated;
+    private final long created;
+    private final boolean unread;
     private UserModel user;
-    private String lastMessage;
+    private final String lastMessage;
 
-    public ContactUiModel(String chatId, Long updated, Long created, Boolean unread, UserModel user, String lastMessage) {
+    public ContactUiModel(String chatId, long updated, long created, boolean unread, UserModel user, String lastMessage) {
         this.chatId = chatId;
         this.updated = updated;
         this.created = created;
@@ -20,20 +21,12 @@ public class ContactUiModel implements Comparable, Parcelable {
         this.lastMessage = lastMessage;
     }
 
-    protected ContactUiModel(Parcel in) {
+
+    private ContactUiModel(Parcel in) {
         chatId = in.readString();
-        if (in.readByte() == 0) {
-            updated = null;
-        } else {
-            updated = in.readLong();
-        }
-        if (in.readByte() == 0) {
-            created = null;
-        } else {
-            created = in.readLong();
-        }
-        byte tmpUnread = in.readByte();
-        unread = tmpUnread == 0 ? null : tmpUnread == 1;
+        updated = in.readLong();
+        created = in.readLong();
+        unread = in.readByte() != 0;
         lastMessage = in.readString();
     }
 
@@ -53,15 +46,15 @@ public class ContactUiModel implements Comparable, Parcelable {
         return chatId;
     }
 
-    public Long getUpdated() {
+    public long getUpdated() {
         return updated;
     }
 
-    public Long getCreated() {
+    public long getCreated() {
         return created;
     }
 
-    public Boolean getUnread() {
+    public boolean getUnread() {
         return unread;
     }
 
@@ -73,12 +66,6 @@ public class ContactUiModel implements Comparable, Parcelable {
         return lastMessage;
     }
 
-    @Override
-    public int compareTo(Object object) {
-        Long compareUpdated = ((ContactUiModel) object).getUpdated();
-        return this.updated.intValue() - compareUpdated.intValue();
-
-    }
 
     @Override
     public int describeContents() {
@@ -86,22 +73,19 @@ public class ContactUiModel implements Comparable, Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(chatId);
-        if (updated == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(updated);
-        }
-        if (created == null) {
-            dest.writeByte((byte) 0);
-        } else {
-            dest.writeByte((byte) 1);
-            dest.writeLong(created);
-        }
-        dest.writeByte((byte) (unread == null ? 0 : unread ? 1 : 2));
-        dest.writeString(lastMessage);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(chatId);
+        parcel.writeLong(updated);
+        parcel.writeLong(created);
+        parcel.writeByte((byte) (unread ? 1 : 0));
+        parcel.writeString(lastMessage);
     }
+
+    @Override
+    public int compareTo(@NonNull ContactUiModel contactUiModel) {
+        Long compareUpdated = (contactUiModel).getUpdated();
+        return (int) (this.updated - compareUpdated.intValue());
+    }
+
 }
 

@@ -1,7 +1,7 @@
 package com.upgradedsoftware.android.chat.models;
 
 public class UserAvatars {
-    private String url;
+    private final String url;
 
     public UserAvatars(String url) {
         this.url = url;

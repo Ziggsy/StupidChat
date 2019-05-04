@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">DummyChat</string>
-    <string name="default_unread">New message. Click here to read it</string>
-    <string name="default_read">Click here to start chat</string>
     <string name="main_screen_app_name">DummyChat</string>
     <string name="info_me">Igor Klimov</string>
     <string name="info_about_me">I am Android Developer :)</string>
     <string name="string_message">Message</string>
+    <string name="you">You: %1$s</string>
 </resources>

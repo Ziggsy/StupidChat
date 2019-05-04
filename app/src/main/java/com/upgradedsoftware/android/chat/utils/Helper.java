@@ -1,14 +1,12 @@
 package com.upgradedsoftware.android.chat.utils;
 
-import android.app.Activity;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.upgradedsoftware.android.chat.App;
-import com.upgradedsoftware.android.chat.adapters.ContactsAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,10 +24,10 @@ public class Helper {
 
     public static final String URL_MY_AVATAR = "https://pp.userapi.com/c852224/v852224410/fbe3b/3B4yGYVmwuM.jpg";
 
+    public static final String BOTTOM_SHEET_TAG = "bottom_sheet_tag";
+
     public static final String JSON_SERVER_RESPONSE = "ServerResponse.json";
-    public static final String JSON_CHAT_MESSAGES = "test-chat-001";
     public static final String JSON_NEW_CHATTERS = "NewChat";
-    public static final String JSON_NEW_MESSAGES = "FakeMessages";
 
     public static final String KEY_MESSAGE_MESSAGES = "messages";
     public static final String KEY_MESSAGE_ID = "id";
@@ -51,10 +49,12 @@ public class Helper {
     public static final String KEY_SETTING_WORK = "work";
     public static final String KEY_AVATAR_URL = "url";
 
-    public static final String LIST_STATE_KEY = "state";
+    public static final String ERROR_TAG_JSON_EXCEPTION = "JSONException";
+    public static final String ERROR_TAG_INTERRUPTED_EXCEPTION = "InterruptedException";
+    public static final String ERROR_TAG_IO_EXCEPTION = "IOException";
 
-    private Helper() {
-    }
+
+    private Helper() {}
 
     public JSONObject initJSON(String way) {
         try {
@@ -65,9 +65,9 @@ public class Helper {
             is.close();
             return new JSONObject(new String(buffer, StandardCharsets.UTF_8));
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Log.e(ERROR_TAG_IO_EXCEPTION,ex.getMessage());
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(ERROR_TAG_JSON_EXCEPTION,e.getMessage());
         }
         return null;
     }

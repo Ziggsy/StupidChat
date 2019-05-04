@@ -1,6 +1,7 @@
 package com.upgradedsoftware.android.chat.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
@@ -14,6 +15,8 @@ import java.lang.ref.WeakReference;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_INTERRUPTED_EXCEPTION;
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_JSON_EXCEPTION;
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_NEW_CHATTERS;
 import static com.upgradedsoftware.android.chat.utils.Helper.JSON_SERVER_RESPONSE;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -32,32 +35,32 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
     protected Void doInBackground(Void... voids) {
         try {
             for (DataHolderServer.getInstance().getCounter(); DataHolderServer.getInstance().getCounter() < 100; DataHolderServer.getInstance().setCounter()) {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(2);
                 JSONObject contactData = getContactData();
                 JSONObject newData = randomEvent(contactData, DataHolderServer.getInstance().getCounter());
                 newData = setUnreadStatusAndLastMessage(newData);
                 publishProgress(newData);
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (InterruptedException ex) {
+            Log.e(ERROR_TAG_INTERRUPTED_EXCEPTION, ex.getMessage());
+            Thread.currentThread().interrupt();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(ERROR_TAG_JSON_EXCEPTION, e.getMessage());
         }
         return null;
     }
 
     private JSONObject getContactData() {
-        if (DataHolderServer.getInstance().mJSONObjectContact == null) {
-            return DataHolderServer.getInstance().mJSONObjectContact = Helper.getInstance().initJSON(JSON_SERVER_RESPONSE);
-        } else {
-            return DataHolderServer.getInstance().mJSONObjectContact;
+        if (DataHolderServer.getInstance().getJSONObjectContact() == null) {
+            DataHolderServer.getInstance().setJSONObjectContact(Helper.getInstance().initJSON(JSON_SERVER_RESPONSE));
         }
+        return DataHolderServer.getInstance().getJSONObjectContact();
     }
 
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {
-        DataHolderServer.getInstance().mJSONObjectContact = values[0];
+        DataHolderServer.getInstance().setJSONObjectContact(values[0]);
         onReceive(values[0]);
         super.onProgressUpdate(values);
     }
@@ -109,13 +112,9 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
             JSONArray messagesObject = DataHolderServer.getInstance().getMessagesFormChat(chatID).getJSONArray(KEY_MESSAGE_MESSAGES);
             //Достаём последнюю месагу
             JSONObject lastMessageInChat = (JSONObject) messagesObject.get(messagesObject.length() - 1);
-            //Меняем поля в JSON'e контакта
-            if (lastMessageInChat.get(KEY_MESSAGE_FROM_ME).equals(true)) {
-                chatObject.put(KEY_CHAT_UNREAD, false);
-            } else {
-                // Будем считать, если последнее сообщение не от нас, то оно не прочитано
-                chatObject.put(KEY_CHAT_UNREAD, true);
-            }
+            // Меняем поля в JSON'e контакта
+            // Будем считать, если последнее сообщение не от нас, то оно не прочитано
+            chatObject.put(KEY_CHAT_UNREAD, !lastMessageInChat.get(KEY_MESSAGE_FROM_ME).equals(true));
             chatObject.put(KEY_CHAT_LAST_MESSAGE, lastMessageInChat.get(KEY_MESSAGE_TEXT));
             newChatsArray.put(chatObject);
         }
@@ -134,7 +133,7 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
         }
     }
 
-    private int getRandomValue(Integer value) {
+    private int getRandomValue(int value) {
         return new Random().nextInt(value);
     }
 }

@@ -1,6 +1,7 @@
 package com.upgradedsoftware.android.chat.tasks;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.upgradedsoftware.android.chat.activity.ChatActivity.ChatActivity;
 import com.upgradedsoftware.android.chat.models.MessageRequestModel;
@@ -13,26 +14,29 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.TimeUnit;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_INTERRUPTED_EXCEPTION;
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_JSON_EXCEPTION;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_ID;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
 
-public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boolean> {
+public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Void> {
 
     private WeakReference<ChatActivity> mActivity;
 
     @Override
-    protected Boolean doInBackground(MessageRequestModel... data) {
+    protected Void doInBackground(MessageRequestModel... data) {
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(1);
             saveToServerBD(data);
-        } catch (JSONException | InterruptedException e) {
-            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e(ERROR_TAG_JSON_EXCEPTION,e.getMessage());
+        } catch (InterruptedException ex){
+            Log.e(ERROR_TAG_INTERRUPTED_EXCEPTION,ex.getMessage());
+            Thread.currentThread().interrupt();
         }
-
-        return null;
     }
 
     private void saveToServerBD(MessageRequestModel[] data) throws JSONException {
@@ -47,10 +51,6 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boo
         DataHolderServer.getInstance().saveMessages(mActivity.get().getChatId(),new JSONObject().put(KEY_MESSAGE_MESSAGES, messageArray));
     }
 
-    @Override
-    protected void onPostExecute(Boolean aBoolean) {
-        super.onPostExecute(aBoolean);
-    }
 
     public void setActivity(ChatActivity activity) {
         this.mActivity = new WeakReference<>(activity);

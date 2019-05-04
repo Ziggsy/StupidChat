@@ -1,5 +1,6 @@
 package com.upgradedsoftware.android.chat.activity.ChatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
+import com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
 import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
@@ -34,14 +36,14 @@ import java.util.UUID;
 
 interface ChatActivityInterface {
     String getChatId();
-
     void newDataReceived(JSONObject object) throws JSONException;
 }
 
 public class ChatActivity extends AppCompatActivity implements ChatActivityInterface {
 
+    private static final int ACTIVITY_LAYOUT = R.layout.activity_chat;
+
     private ChatAdapter adapter;
-    private boolean firstSetup = true;
     private RecyclerView recyclerView;
     private FakeChatRequest serverChat;
     private String mChatId;
@@ -52,70 +54,72 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     @Override
+    public void newDataReceived(JSONObject object) throws JSONException {
+        DataHolderApp.getInstance().setMessageList(MessageMapper.mapToUI(object), mChatId);
+        adapter.setNewData(DataHolderApp.getInstance().getMessageList(mChatId));
+        this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        initDataAndUI();
-        initClickListener();
-        initFakeRequests();
-
+        setContentView(ACTIVITY_LAYOUT);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initDataAndUI();
+        initFakeRequests();
+        initRecycler();
+        initClickListener();
+    }
+
+    @Override
+    protected void onStop() {
+        serverChat.cancel(true);
+        DataHolderServer.saveMessagesOnServer(mChatId);
+        super.onStop();
     }
 
     private void initDataAndUI() {
         Bundle bundle = getIntent().getExtras();
-        TextView view = findViewById(R.id.userName);
         if (bundle != null) {
-            view.setText(bundle.getString("name"));
+            TextView view = findViewById(R.id.userName);
+            view.setText(bundle.getString(ContactListActivity.Key.BUNDLE_NAME));
             ImageView imageView = findViewById(R.id.userAvatar);
-            Helper.getInstance().imageLoader(imageView, bundle.getString("url"));
-            mChatId = bundle.getString("chatID");
+            Helper.getInstance().imageLoader(imageView, bundle.getString(ContactListActivity.Key.BUNDLE_URL));
+            mChatId = bundle.getString(ContactListActivity.Key.BUNDLE_CHAT_ID);
         }
     }
 
+    private void initFakeRequests() {
+        serverChat = new FakeChatRequest();
+        serverChat.setActivity(this);
+        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                DataHolderServer.getInstance().getMessagesFormChat(mChatId));
+    }
+
+    private void initRecycler() {
+        this.recyclerView = findViewById(R.id.recyclerChat);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        setAdapter(DataHolderApp.getInstance().getMessageList(mChatId));
+    }
+
+    private void setAdapter(List<ChatUiModel> data) {
+        adapter = new ChatAdapter(data);
+        recyclerView.setAdapter(adapter);
+        this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
+    }
+
+    @SuppressLint("ClickableViewAccessibility") // sorry visually impaired people :<
     private void initClickListener() {
-        ImageView image = findViewById(R.id.arrowBack);
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        ImageView imageArrow = findViewById(R.id.arrowBack);
         ImageView imageSendMessage = findViewById(R.id.sendButton);
         EditText editText = findViewById(R.id.messageEntry);
-        editText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                recyclerView.smoothScrollToPosition(adapter.getItemCount());
-                    }
-                }, 100);
-                return false;
-            }
-        });
-
-
-        imageSendMessage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText editText = findViewById(R.id.messageEntry);
-                if (!editText.getText().toString().equals("")) {
-                    MessageRequestModel message = new MessageRequestModel(
-                            UUID.randomUUID().toString(),
-                            editText.getText().toString(),
-                            TimeParser.getCurrentTime()
-                    );
-                    sendMessageToServer(message);
-                    editText.setText("");
-                }
-            }
-        });
+        imageArrow.setOnClickListener(setClickToImageArrow());
+        editText.setOnTouchListener(setOnTouchEditText());
+        imageSendMessage.setOnClickListener(setSendMessageClick());
     }
 
     private void sendMessageToServer(MessageRequestModel messageRequestModel) {
@@ -135,53 +139,50 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
                         MessageStatus.MESSAGE_CACHED
                 )
         );
-        updateAdapterData();
-    }
-
-
-    private void initFakeRequests() {
-        serverChat = new FakeChatRequest();
-        serverChat.setActivity(this);
-        try {
-            serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().getMessagesFormChat(mChatId));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void initRecycler(List<ChatUiModel> data) {
-        this.recyclerView = findViewById(R.id.recyclerChat);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ChatAdapter(data);
-        recyclerView.setAdapter(adapter);
+        adapter.setNewData(DataHolderApp.getInstance().getMessageList(mChatId));
         this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
-        firstSetup = false;
     }
 
-    @Override
-    public void newDataReceived(JSONObject object) throws JSONException {
-        DataHolderApp.getInstance().setMessageList(MessageMapper.mapToUI(object), mChatId);
-        updateAdapterData();
+    private View.OnClickListener setSendMessageClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = findViewById(R.id.messageEntry);
+                if (!editText.getText().toString().equals("")) {
+                    MessageRequestModel message = new MessageRequestModel(
+                            UUID.randomUUID().toString(),
+                            editText.getText().toString(),
+                            TimeParser.getCurrentTime()
+                    );
+                    sendMessageToServer(message);
+                    editText.setText("");
+                }
+            }
+        };
     }
 
-    private void updateAdapterData() {
-        if (firstSetup) {
-            initRecycler(DataHolderApp.getInstance().getMessageList(mChatId));
-        } else {
-            adapter.setNewData(DataHolderApp.getInstance().getMessageList(mChatId));
-            adapter.notifyDataSetChanged();
-            this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
-        }
+    private View.OnTouchListener setOnTouchEditText() {
+        return new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                    }
+                }, 100);
+                return false;
+            }
+        };
     }
 
-    @Override
-    protected void onStop() {
-        serverChat.cancel(true);
-        try {
-            DataHolderServer.saveMessagesOnServer(mChatId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        super.onStop();
+    private View.OnClickListener setClickToImageArrow() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        };
     }
 }

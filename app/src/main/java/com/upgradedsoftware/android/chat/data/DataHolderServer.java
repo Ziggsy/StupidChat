@@ -1,5 +1,7 @@
 package com.upgradedsoftware.android.chat.data;
 
+import android.util.Log;
+
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.UserAvatars;
 import com.upgradedsoftware.android.chat.models.UserModel;
@@ -12,7 +14,9 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_JSON_EXCEPTION;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CREATED;
@@ -32,8 +36,8 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_NAME;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 
 public class DataHolderServer {
-    public JSONObject mJSONObjectContact;
-//    public JSONObject mJSONObjectMessages;
+
+    private JSONObject mJSONObjectContact;
     private HashMap<String, JSONObject> messagesMap;
     private int counter;
 
@@ -46,6 +50,14 @@ public class DataHolderServer {
     private DataHolderServer() {
     }
 
+    public JSONObject getJSONObjectContact() {
+        return mJSONObjectContact;
+    }
+
+    public void setJSONObjectContact(JSONObject object) {
+        mJSONObjectContact = object;
+    }
+
     public int getCounter() {
         return counter;
     }
@@ -54,31 +66,19 @@ public class DataHolderServer {
         counter++;
     }
 
-    public HashMap<String, JSONObject> getMessagesMap(){
-        return messagesMap;
-    }
-
-    private void initMessagesMap() throws JSONException {
-        HashMap<String, JSONObject> newMap = new HashMap<>();
-        JSONArray chatsArray = mJSONObjectContact.getJSONArray(KEY_CHAT_CHATS);
-        for (int i = 0; i < chatsArray.length(); i++){
-            JSONObject chat = (JSONObject) chatsArray.get(i);
-            String chatID = (String) chat.get(KEY_CHAT_ID);
-            newMap.put(chatID, Helper.getInstance().initJSON(chatID));
+    public JSONObject getMessagesFormChat(String chatID) {
+        if (messagesMap == null) {
+            try {
+                initMessagesMap();
+            } catch (JSONException e) {
+                Log.e(ERROR_TAG_JSON_EXCEPTION, e.getMessage());
+            }
         }
-        messagesMap = newMap;
-    }
-
-    public JSONObject getMessagesFormChat(String chatID) throws JSONException {
-        if (messagesMap == null){
-            initMessagesMap();
-        }
-        if (messagesMap.get(chatID) == null){
+        if (messagesMap.get(chatID) == null) {
             messagesMap.put(chatID, Helper.getInstance().initJSON(chatID));
-            //TODO если initJson вернет null, то надо это обработать
             return messagesMap.get(chatID);
         } else {
-           return messagesMap.get(chatID);
+            return messagesMap.get(chatID);
         }
     }
 
@@ -86,19 +86,23 @@ public class DataHolderServer {
         getMessagesMap().put(chatID, object);
     }
 
-    public static void saveMessagesOnServer(String id) throws JSONException {
-        JSONArray array = new JSONArray();
-        List<ChatUiModel> currentList = DataHolderApp.getInstance().getMessageList(id);
-        for (int i = 0; i < currentList.size(); i++) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(KEY_MESSAGE_ID, currentList.get(i).getMessageID());
-            jsonObject.put(KEY_MESSAGE_FROM_ME, currentList.get(i).getFromMe());
-            jsonObject.put(KEY_MESSAGE_TEXT, currentList.get(i).getTextMessage());
-            jsonObject.put(KEY_MESSAGE_CREATED, currentList.get(i).getCreated());
-            array.put(jsonObject);
+    public static void saveMessagesOnServer(String id) {
+        try {
+            JSONArray array = new JSONArray();
+            List<ChatUiModel> currentList = DataHolderApp.getInstance().getMessageList(id);
+            for (int i = 0; i < currentList.size(); i++) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(KEY_MESSAGE_ID, currentList.get(i).getMessageID());
+                jsonObject.put(KEY_MESSAGE_FROM_ME, currentList.get(i).getFromMe());
+                jsonObject.put(KEY_MESSAGE_TEXT, currentList.get(i).getTextMessage());
+                jsonObject.put(KEY_MESSAGE_CREATED, currentList.get(i).getCreated());
+                array.put(jsonObject);
+            }
+            JSONObject object = new JSONObject();
+            DataHolderServer.getInstance().saveMessages(id, object.put(KEY_MESSAGE_MESSAGES, array));
+        } catch (JSONException e) {
+            Log.e(ERROR_TAG_JSON_EXCEPTION, e.getMessage());
         }
-        JSONObject object = new JSONObject();
-        DataHolderServer.getInstance().saveMessages(id, object.put(KEY_MESSAGE_MESSAGES, array));
     }
 
     public static void saveToServerModel() throws JSONException {
@@ -114,6 +118,21 @@ public class DataHolderServer {
         }
         JSONObject object = new JSONObject();
         DataHolderServer.getInstance().mJSONObjectContact = object.put(KEY_CHAT_CHATS, array);
+    }
+
+    private Map<String, JSONObject> getMessagesMap() {
+        return messagesMap;
+    }
+
+    private void initMessagesMap() throws JSONException {
+        HashMap<String, JSONObject> newMap = new HashMap<>();
+        JSONArray chatsArray = mJSONObjectContact.getJSONArray(KEY_CHAT_CHATS);
+        for (int i = 0; i < chatsArray.length(); i++) {
+            JSONObject chat = (JSONObject) chatsArray.get(i);
+            String chatID = (String) chat.get(KEY_CHAT_ID);
+            newMap.put(chatID, Helper.getInstance().initJSON(chatID));
+        }
+        messagesMap = newMap;
     }
 
     private static JSONObject mapUserModel(UserModel user) throws JSONException {

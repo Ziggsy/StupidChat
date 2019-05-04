@@ -1,21 +1,13 @@
 package com.upgradedsoftware.android.chat.models;
 
 public class ChatUiModel {
-    private String messageID;
-    private Boolean fromMe;
-    private String textMessage;
-    private Long created;
-    private Integer mMessageStatus;
+    private final String messageID;
+    private final boolean fromMe;
+    private final String textMessage;
+    private final long created;
+    private int mMessageStatus;
 
-    public ChatUiModel(String messageID, Boolean fromMe, String textMessage, Long created){
-        this.messageID = messageID;
-        this.fromMe = fromMe;
-        this.textMessage = textMessage;
-        this.created = created;
-        this.mMessageStatus = MessageStatus.MESSAGE_OK;
-    }
-
-    public ChatUiModel(String messageID, Boolean fromMe, String textMessage, Long created, Integer status){
+    public ChatUiModel(String messageID, boolean fromMe, String textMessage, long created, int status) {
         this.messageID = messageID;
         this.fromMe = fromMe;
         this.textMessage = textMessage;
@@ -23,12 +15,11 @@ public class ChatUiModel {
         this.mMessageStatus = status;
     }
 
-
     public String getMessageID() {
         return messageID;
     }
 
-    public Boolean getFromMe() {
+    public boolean getFromMe() {
         return fromMe;
     }
 
@@ -36,16 +27,17 @@ public class ChatUiModel {
         return textMessage;
     }
 
-    public Long getCreated() {
+    public long getCreated() {
         return created;
     }
 
-    public Integer getMessageStatus() {
+    public int getMessageStatus() {
         return mMessageStatus;
     }
 
     public void setMessageStatus(int status) {
         mMessageStatus = status;
     }
+
 }
 

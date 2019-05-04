@@ -1,7 +1,6 @@
 package com.upgradedsoftware.android.chat.utils;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -19,20 +18,38 @@ import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
 
+import java.util.Objects;
+
 import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
 
 
 public class BottomSheetDialog extends BottomSheetDialogFragment {
-    public String id = "";
-    public String userName = "";
-    public String userInfo = "";
-    public String url = "";
+    private String id = "";
+    private String userName = "";
+    private String userInfo = "";
+    private String url = "";
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUserInfo(String userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return inflater.inflate(R.layout.bottom_sheet_layout, container, false);
     }
 
@@ -44,6 +61,8 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Исправление баг с landscape
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -54,7 +73,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
                 behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                     @Override
                     public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                        dialog.dismiss();
+                        // Ничего не надо делать :>
                     }
 
                     @Override

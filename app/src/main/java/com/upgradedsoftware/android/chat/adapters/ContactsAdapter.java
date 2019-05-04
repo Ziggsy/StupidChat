@@ -1,7 +1,7 @@
 package com.upgradedsoftware.android.chat.adapters;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,19 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.upgradedsoftware.android.chat.App;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
-import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.ContactDiff;
+import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.List;
 
-public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHolder> {
+public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ContactViewHolder> {
 
-    private List<ContactUiModel> mData;
-    private ItemClickListener mClickListener;
-    private AvatarClickListener mAvatarListener;
+    private final List<ContactUiModel> mData;
+    private final ItemClickListener mClickListener;
+    private final AvatarClickListener mAvatarListener;
 
     public ContactsAdapter(List<ContactUiModel> data, ItemClickListener listener, AvatarClickListener mAvatarListener) {
         this.mData = data;
@@ -49,14 +50,14 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         View view = mInflater.inflate(R.layout.item_contact_in_list, parent, false);
-        return new ViewHolder(view);
+        return new ContactViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         ContactUiModel data = mData.get(position);
         holder.userName.setText(data.getUser().getName());
 
@@ -64,27 +65,26 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
             holder.unreadStatus.setVisibility(View.VISIBLE);
             holder.subText.setVisibility(View.VISIBLE);
             holder.subText.setText(data.getLastMessage());
-            holder.subText.setTextColor(Color.parseColor("#FF57A5A0")); //TODO Теперь есть app class, надо сделать по человечески
+            holder.subText.setTextColor(ContextCompat.getColor(App.getContext(), R.color.unreadMessage));
         } else {
             holder.unreadStatus.setVisibility(View.INVISIBLE);
-            holder.subText.setText("You: " + data.getLastMessage());
+            holder.subText.setText(App.getContext().getString(R.string.you, data.getLastMessage()));
             holder.subText.setVisibility(View.VISIBLE);
-            holder.subText.setTextColor(Color.parseColor("#FF868686")); //TODO Теперь есть app class, надо сделать по человечески
+            holder.subText.setTextColor(ContextCompat.getColor(App.getContext(), R.color.textReadMessageColor));
         }
         Helper.getInstance().imageLoader(holder.userAvatar, getData().get(position).getUser().getUserAvatars().getUrl());
         holder.lastMessageTime.setText(TimeParser.timeParser(data.getUpdated()));
     }
 
+    public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final TextView userName;
+        private final ImageView unreadStatus;
+        private final ImageView userAvatar;
+        private final TextView lastMessageTime;
+        private final TextView subText;
 
-        private TextView userName;
-        private ImageView unreadStatus;
-        private ImageView userAvatar;
-        private TextView lastMessageTime;
-        private TextView subText;
-
-        ViewHolder(View itemView) {
+        ContactViewHolder(View itemView) {
             super(itemView);
             userName = itemView.findViewById(R.id.userName);
             unreadStatus = itemView.findViewById(R.id.status);

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -32,7 +33,7 @@ public class ChatListMapper {
     private ChatListMapper() {
     }
 
-    public static ArrayList<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
+    public static List<ContactUiModel> mapToUI(JSONObject response) throws JSONException {
         ArrayList<ContactUiModel> list = new ArrayList<>();
 
         JSONArray chatsArray = response.getJSONArray(KEY_CHAT_CHATS);

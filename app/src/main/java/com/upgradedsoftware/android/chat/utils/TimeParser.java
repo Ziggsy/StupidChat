@@ -10,13 +10,13 @@ public class TimeParser {
         throw new IllegalStateException("Utility class");
     }
 
-    private static long moscowGMT = 3L * 60L * 60L;
+    private static final long MOSCOW_GMT = 3L * 60L * 60L;
 
-    public static Long getCurrentTime() {
-        return System.currentTimeMillis() / 1000L + moscowGMT;
+    public static long getCurrentTime() {
+        return System.currentTimeMillis() / 1000L + MOSCOW_GMT;
     }
 
-    public static String timeParser(Long date) {
+    public static String timeParser(long date) {
         final SimpleDateFormat NOTIFICATION_TIME_FORMAT;
         final SimpleDateFormat DAY_OF_THE_WEEK;
         final SimpleDateFormat DATE_FORMAT;
@@ -25,10 +25,10 @@ public class TimeParser {
         DAY_OF_THE_WEEK = new SimpleDateFormat("EEE", Locale.getDefault());
         DATE_FORMAT = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
 
-        long currentTime = System.currentTimeMillis() / 1000L + moscowGMT;
-        date = date + moscowGMT;
+        long currentTime = System.currentTimeMillis() / 1000L + MOSCOW_GMT;
+        date = date + MOSCOW_GMT;
 
-        if (date == null || date == 0) {
+        if (date == 0) {
             return "-";
         }
 
@@ -47,7 +47,7 @@ public class TimeParser {
 
     }
 
-    public static String parseInDay(Long date) {
+    public static String parseInDay(long date) {
         final SimpleDateFormat NOTIFICATION_TIME_FORMAT;
         NOTIFICATION_TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.getDefault());
         NOTIFICATION_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));

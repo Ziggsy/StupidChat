@@ -1,6 +1,5 @@
 package com.upgradedsoftware.android.chat.utils;
 
-import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
@@ -9,8 +8,8 @@ import java.util.List;
 
 public class ContactDiff extends DiffUtil.Callback {
 
-    private List<ContactUiModel> oldData;
-    private List<ContactUiModel> newData;
+    private final List<ContactUiModel> oldData;
+    private final List<ContactUiModel> newData;
 
     public ContactDiff(List<ContactUiModel> newData, List<ContactUiModel> oldData) {
         this.newData = newData;
@@ -34,9 +33,9 @@ public class ContactDiff extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return (oldData.get(oldItemPosition).getUnread().equals(newData.get(oldItemPosition).getUnread()) &&
-                oldData.get(oldItemPosition).getCreated().equals(newData.get(oldItemPosition).getCreated()) &&
-                oldData.get(oldItemPosition).getUpdated().equals(newData.get(oldItemPosition).getUpdated()) &&
+        return (oldData.get(oldItemPosition).getUnread() == (newData.get(oldItemPosition).getUnread()) &&
+                oldData.get(oldItemPosition).getCreated() == (newData.get(oldItemPosition).getCreated()) &&
+                oldData.get(oldItemPosition).getUpdated() == (newData.get(oldItemPosition).getUpdated()) &&
                 oldData.get(oldItemPosition).getLastMessage().equals(newData.get(oldItemPosition).getLastMessage()) &&
                 oldData.get(oldItemPosition).getUser().getUserId().equals(newData.get(oldItemPosition).getUser().getUserId()) &&
                 oldData.get(oldItemPosition).getUser().getName().equals(newData.get(oldItemPosition).getUser().getName()) &&
@@ -45,9 +44,4 @@ public class ContactDiff extends DiffUtil.Callback {
         );
     }
 
-    @Nullable
-    @Override
-    public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        return super.getChangePayload(oldItemPosition, newItemPosition);
-    }
 }

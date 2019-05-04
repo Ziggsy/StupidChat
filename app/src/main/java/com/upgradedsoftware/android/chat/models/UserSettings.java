@@ -1,7 +1,7 @@
 package com.upgradedsoftware.android.chat.models;
 
 public class UserSettings {
-    private String work;
+    private final String work;
 
     public UserSettings(String work){
         this.work = work;

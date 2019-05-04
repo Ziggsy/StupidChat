@@ -1,11 +1,11 @@
 package com.upgradedsoftware.android.chat.models;
 
 public class MessageRequestModel {
-    private String messageID;
-    private String textMessage;
-    private Long created;
+    private final String messageID;
+    private final String textMessage;
+    private final long created;
 
-    public MessageRequestModel(String messageID, String textMessage, Long created){
+    public MessageRequestModel(String messageID, String textMessage, long created){
         this.messageID = messageID;
         this.textMessage = textMessage;
         this.created = created;
@@ -19,7 +19,7 @@ public class MessageRequestModel {
         return textMessage;
     }
 
-    public Long getCreated() {
+    public long getCreated() {
         return created;
     }
 }
