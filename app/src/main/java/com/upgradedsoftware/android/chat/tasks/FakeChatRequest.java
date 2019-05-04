@@ -31,11 +31,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {
-        try {
-            DataHolderServer.getInstance().saveMessages(mActivity.get().getChatId(),values[0]);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        DataHolderServer.getInstance().saveMessages(mActivity.get().getChatId(),values[0]);
         onReceive(values[0]);
         super.onProgressUpdate(values);
     }

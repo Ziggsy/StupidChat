@@ -57,16 +57,6 @@ public class Helper {
     }
 
     public JSONObject initJSON(String way) {
-//        File file = new File(context.getFilesDir(), way);
-
-        // Смотрим есть ли файл БД фейкового сервера на девайсе, если нет запускаем дефолтный JSON из assets
-//        if(file.exists()) {
-//            try {
-//                return new JSONObject(file.toString());
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
         try {
             InputStream is = App.getContext().getAssets().open(way);
             int size = is.available();
@@ -79,8 +69,6 @@ public class Helper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        }
-
         return null;
     }
 

@@ -33,6 +33,7 @@ import java.util.List;
 
 interface ChatActivityInterface {
     String getChatId();
+
     void newDataReceived(JSONObject object) throws JSONException;
 }
 
@@ -45,7 +46,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private String mChatId;
 
     @Override
-    public String getChatId(){
+    public String getChatId() {
         return mChatId;
     }
 
@@ -55,12 +56,8 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         setContentView(R.layout.activity_chat);
         initDataAndUI();
         initClickListener();
-        try {
-            initMessageList();
-            initFakeRequests();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        initFakeRequests();
+
     }
 
     @Override
@@ -139,14 +136,15 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         updateAdapterData();
     }
 
-    private void initMessageList() throws JSONException {
-        DataHolderServer.getInstance().saveMessages(mChatId, Helper.getInstance().initJSON(mChatId));
-    }
 
-    private void initFakeRequests() throws JSONException {
+    private void initFakeRequests() {
         serverChat = new FakeChatRequest();
         serverChat.setActivity(this);
-        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().getMessagesFormChat(mChatId));
+        try {
+            serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().getMessagesFormChat(mChatId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initRecycler(List<ChatUiModel> data) {

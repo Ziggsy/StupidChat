@@ -82,7 +82,7 @@ public class DataHolderServer {
         }
     }
 
-    public void saveMessages(String chatID, JSONObject object) throws JSONException {
+    public void saveMessages(String chatID, JSONObject object) {
         getMessagesMap().put(chatID, object);
     }
 
