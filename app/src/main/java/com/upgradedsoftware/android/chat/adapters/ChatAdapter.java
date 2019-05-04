@@ -1,6 +1,6 @@
 package com.upgradedsoftware.android.chat.adapters;
 
-import android.graphics.drawable.TransitionDrawable;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,19 +11,51 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
+import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.ItemViewType;
 import com.upgradedsoftware.android.chat.models.MessageStatus;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<ChatUiModel> mData;
+    private List<ChatUiModel> cacheData = new ArrayList<>();
+
+    public void addToCache(ChatUiModel element) {
+        cacheData.add(element);
+    }
+
+    public List<ChatUiModel> getListToSave(){
+        mData.removeAll(cacheData);
+        return mData;
+    }
 
     public void setNewData(List<ChatUiModel> data) {
-        this.mData = data;
+//        final ChatDiff diffCallback = new ChatDiff(data, this.mData);
+//        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+//        this.mData.clear();
+//        this.mData.addAll(data);
+//        diffResult.dispatchUpdatesTo(this);
+
+
+        List<ChatUiModel> temp = new ArrayList<>(data);
+        if(!cacheData.isEmpty()){
+            for (int i = 0; i < data.size(); i++){
+                for (int j = 0; j < cacheData.size(); j++) {
+                    if(data.get(i).getTextMessage().equals(cacheData.get(j).getTextMessage()) && !data.get(i).getMessageStatus().equals(cacheData.get(j).getMessageStatus())){
+                        cacheData.remove(j);
+                        temp.get(i).setMessageStatus(MessageStatus.MESSAGE_CACHED_SAVED);
+                    }
+                }
+            }
+            temp.addAll(cacheData);
+        }
+        this.mData = temp;
+
     }
 
     public ChatAdapter(List<ChatUiModel> data) {
@@ -116,28 +148,36 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             message.setText(item.getTextMessage());
             time.setText(TimeParser.parseInDay(item.getCreated()));
 
-            //TODO Криво работает анимация, если написать много сообщений то совсем хгабелла
+            time.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            root.setBackgroundResource(R.drawable.rounded_corner_from_you);
+
             switch (item.getMessageStatus()){
                 case MessageStatus.MESSAGE_CACHED: {
                     time.setVisibility(View.INVISIBLE);
                     progressBar.setVisibility(View.VISIBLE);
-                    root.setBackgroundResource(R.drawable.rounded_corner_from_you_cached_0);
+                    root.setBackgroundResource(R.drawable.rounded_corner_from_you_cached_saved);
                     return;
                 }
                 case MessageStatus.MESSAGE_CACHED_SAVED:{
                     progressBar.setVisibility(View.GONE);
                     time.setVisibility(View.VISIBLE);
+
+                    AnimationDrawable anim;
                     root.setBackgroundResource(R.drawable.animation_message);
-                    TransitionDrawable transition = (TransitionDrawable) root.getBackground();
-                    transition.startTransition(500);
+                    anim = (AnimationDrawable) root.getBackground();
+                    anim.setEnterFadeDuration(250);
+                    anim.setExitFadeDuration(100000);
+                    anim.start();
+
+
                     item.setMessageStatus(MessageStatus.MESSAGE_OK);
                     return;
                 }
                 default:{
                     time.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.INVISIBLE);
                     root.setBackgroundResource(R.drawable.rounded_corner_from_you);
-                    return;
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.upgradedsoftware.android.chat.activity.ChatActivity;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,24 +16,23 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
 import com.upgradedsoftware.android.chat.data.DataHolderApp;
+import com.upgradedsoftware.android.chat.data.DataHolderServer;
 import com.upgradedsoftware.android.chat.mappers.MessageMapper;
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.MessageRequestModel;
 import com.upgradedsoftware.android.chat.models.MessageStatus;
 import com.upgradedsoftware.android.chat.tasks.FakeChatRequest;
 import com.upgradedsoftware.android.chat.tasks.SendMessageRequest;
-import com.upgradedsoftware.android.chat.data.DataHolderServer;
 import com.upgradedsoftware.android.chat.utils.Helper;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 interface ChatActivityInterface {
-
+    String getChatId();
     void newDataReceived(JSONObject object) throws JSONException;
 }
 
@@ -45,16 +43,24 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     private RecyclerView recyclerView;
     private FakeChatRequest serverChat;
     private String mChatId;
-    private ArrayList<ChatUiModel> messageData;
+
+    @Override
+    public String getChatId(){
+        return mChatId;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initDataAndUI();
-        initMessageList();
-        initFakeRequests();
         initClickListener();
+        try {
+            initMessageList();
+            initFakeRequests();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -62,7 +68,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         super.onResume();
     }
 
-    private void initDataAndUI(){
+    private void initDataAndUI() {
         Bundle bundle = getIntent().getExtras();
         TextView view = findViewById(R.id.userName);
         if (bundle != null) {
@@ -73,7 +79,6 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void initClickListener() {
         ImageView image = findViewById(R.id.arrowBack);
         image.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +92,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                new Handler().postDelayed (new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         recyclerView.smoothScrollToPosition(adapter.getItemCount());
@@ -101,7 +106,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
             @Override
             public void onClick(View v) {
                 EditText editText = findViewById(R.id.messageEntry);
-                if(!editText.getText().toString().equals("")) {
+                if (!editText.getText().toString().equals("")) {
                     MessageRequestModel message = new MessageRequestModel(
                             mChatId,
                             editText.getText().toString(),
@@ -115,33 +120,33 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     private void sendMessageToServer(MessageRequestModel messageRequestModel) {
-        cacheMessage(messageRequestModel);
         SendMessageRequest messageRequest = new SendMessageRequest();
         messageRequest.setActivity(this);
         messageRequest.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, messageRequestModel);
+        cacheMessage(messageRequestModel);
     }
 
     private void cacheMessage(MessageRequestModel messageRequestModel) {
-        DataHolderApp.getInstance().saveCachedMessage(
+        adapter.addToCache(
                 new ChatUiModel(
                         "",
                         true,
                         messageRequestModel.getTextMessage(),
                         messageRequestModel.getCreated(),
                         MessageStatus.MESSAGE_CACHED
-                ), mChatId
+                )
         );
         updateAdapterData();
     }
 
-    private void initMessageList() {
-        DataHolderServer.getInstance().mJSONObjectMessages = Helper.getInstance().initJSON(mChatId);
+    private void initMessageList() throws JSONException {
+        DataHolderServer.getInstance().saveMessages(mChatId, Helper.getInstance().initJSON(mChatId));
     }
 
-    private void initFakeRequests() {
+    private void initFakeRequests() throws JSONException {
         serverChat = new FakeChatRequest();
         serverChat.setActivity(this);
-        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().mJSONObjectMessages);
+        serverChat.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, DataHolderServer.getInstance().getMessagesFormChat(mChatId));
     }
 
     private void initRecycler(List<ChatUiModel> data) {
@@ -155,43 +160,28 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
 
     @Override
     public void newDataReceived(JSONObject object) throws JSONException {
-        this.messageData = MessageMapper.mapToUI(object);
-        DataHolderApp.getInstance().mChatUiMap.put(mChatId, messageData);
+        DataHolderApp.getInstance().setMessageList(MessageMapper.mapToUI(object), mChatId);
         updateAdapterData();
     }
 
     private void updateAdapterData() {
         if (firstSetup) {
-            initRecycler(messageData);
+            initRecycler(DataHolderApp.getInstance().getMessageList(mChatId));
         } else {
-            checkCache();
-            adapter.setNewData(messageData);
+            adapter.setNewData(DataHolderApp.getInstance().getMessageList(mChatId));
             adapter.notifyDataSetChanged();
             this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
-        }
-    }
-
-    private void checkCache() {
-        List<ChatUiModel> cachedData = DataHolderApp.getInstance().getCachedData(mChatId);
-        if (!cachedData.isEmpty()){
-            for (int i = 0; i < messageData.size(); i++){
-                for (int j = 0; j < cachedData.size(); j++){
-                    if(messageData.get(i).getTextMessage().equals(cachedData.get(j).getTextMessage())){
-                        cachedData.remove(j);
-                        ChatUiModel element = messageData.get(i);
-                        element.setMessageStatus(MessageStatus.MESSAGE_CACHED_SAVED);
-                        messageData.remove(i);
-                        messageData.add(element);
-                    }
-                }
-            }
-            messageData.addAll(cachedData);
         }
     }
 
     @Override
     protected void onStop() {
         serverChat.cancel(true);
+        try {
+            DataHolderServer.saveMessagesOnServer(mChatId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         super.onStop();
     }
 }

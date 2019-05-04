@@ -1,5 +1,6 @@
 package com.upgradedsoftware.android.chat.data;
 
+import com.upgradedsoftware.android.chat.models.ChatUiModel;
 import com.upgradedsoftware.android.chat.models.UserAvatars;
 import com.upgradedsoftware.android.chat.models.UserModel;
 import com.upgradedsoftware.android.chat.models.UserSettings;
@@ -10,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
@@ -18,7 +20,11 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UPDATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_WITH_USER;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_SETTING_WORK;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_AVATAR;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_ID;
@@ -27,7 +33,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 
 public class DataHolderServer {
     public JSONObject mJSONObjectContact;
-    public JSONObject mJSONObjectMessages;
+//    public JSONObject mJSONObjectMessages;
     private HashMap<String, JSONObject> messagesMap;
     private int counter;
 
@@ -46,6 +52,10 @@ public class DataHolderServer {
 
     public void setCounter() {
         counter++;
+    }
+
+    public HashMap<String, JSONObject> getMessagesMap(){
+        return messagesMap;
     }
 
     private void initMessagesMap() throws JSONException {
@@ -70,6 +80,25 @@ public class DataHolderServer {
         } else {
            return messagesMap.get(chatID);
         }
+    }
+
+    public void saveMessages(String chatID, JSONObject object) throws JSONException {
+        getMessagesMap().put(chatID, object);
+    }
+
+    public static void saveMessagesOnServer(String id) throws JSONException {
+        JSONArray array = new JSONArray();
+        List<ChatUiModel> currentList = DataHolderApp.getInstance().getMessageList(id);
+        for (int i = 0; i < currentList.size(); i++) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(KEY_MESSAGE_ID, currentList.get(i).getMessageID());
+            jsonObject.put(KEY_MESSAGE_FROM_ME, currentList.get(i).getFromMe());
+            jsonObject.put(KEY_MESSAGE_TEXT, currentList.get(i).getTextMessage());
+            jsonObject.put(KEY_MESSAGE_CREATED, currentList.get(i).getCreated());
+            array.put(jsonObject);
+        }
+        JSONObject object = new JSONObject();
+        DataHolderServer.getInstance().saveMessages(id, object.put(KEY_MESSAGE_MESSAGES, array));
     }
 
     public static void saveToServerModel() throws JSONException {

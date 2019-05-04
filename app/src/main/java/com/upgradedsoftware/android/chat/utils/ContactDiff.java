@@ -7,12 +7,12 @@ import com.upgradedsoftware.android.chat.models.ContactUiModel;
 
 import java.util.List;
 
-public class MyDiffCallback extends DiffUtil.Callback {
+public class ContactDiff extends DiffUtil.Callback {
 
     private List<ContactUiModel> oldData;
     private List<ContactUiModel> newData;
 
-    public MyDiffCallback(List<ContactUiModel> newData, List<ContactUiModel> oldData) {
+    public ContactDiff(List<ContactUiModel> newData, List<ContactUiModel> oldData) {
         this.newData = newData;
         this.oldData = oldData;
     }

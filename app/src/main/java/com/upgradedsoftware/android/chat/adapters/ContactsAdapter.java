@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.upgradedsoftware.android.chat.R;
 import com.upgradedsoftware.android.chat.models.ContactUiModel;
 import com.upgradedsoftware.android.chat.utils.Helper;
-import com.upgradedsoftware.android.chat.utils.MyDiffCallback;
+import com.upgradedsoftware.android.chat.utils.ContactDiff;
 import com.upgradedsoftware.android.chat.utils.TimeParser;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ViewHo
     }
 
     public void setNewData(List<ContactUiModel> data) {
-        final MyDiffCallback diffCallback = new MyDiffCallback(data, this.mData);
+        final ContactDiff diffCallback = new ContactDiff(data, this.mData);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
         this.mData.clear();
         this.mData.addAll(data);

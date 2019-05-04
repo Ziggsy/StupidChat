@@ -42,10 +42,10 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Boo
         message.put(KEY_MESSAGE_FROM_ME, true);
         message.put(KEY_MESSAGE_TEXT, data[0].getTextMessage());
         message.put(KEY_MESSAGE_CREATED, data[0].getCreated());
-        JSONObject newData = DataHolderServer.getInstance().mJSONObjectMessages;
+        JSONObject newData = DataHolderServer.getInstance().getMessagesFormChat(mActivity.get().getChatId());
         JSONArray messageArray = newData.getJSONArray(KEY_MESSAGE_MESSAGES);
         messageArray.put(message);
-        DataHolderServer.getInstance().mJSONObjectMessages = new JSONObject().put(KEY_MESSAGE_MESSAGES, messageArray);
+        DataHolderServer.getInstance().saveMessages(mActivity.get().getChatId(),new JSONObject().put(KEY_MESSAGE_MESSAGES, messageArray));
     }
 
     @Override

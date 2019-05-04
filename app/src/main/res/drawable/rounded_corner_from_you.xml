@@ -4,8 +4,8 @@
 
     <gradient
         android:angle="225"
-        android:startColor="#26DA22FF"
-        android:endColor="#269733EE">
+        android:startColor="#30DA22FF"
+        android:endColor="#309733EE">
     </gradient>
 
     <stroke

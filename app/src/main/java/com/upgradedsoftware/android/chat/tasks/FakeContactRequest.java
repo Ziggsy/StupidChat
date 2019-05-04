@@ -114,7 +114,6 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
                 chatObject.put(KEY_CHAT_UNREAD, false);
             } else {
                 // Будем считать, если последнее сообщение не от нас, то оно не прочитано
-                // TODO Сделать так, чтобы после захода в окно чата, ставился флаг unread = false
                 chatObject.put(KEY_CHAT_UNREAD, true);
             }
             chatObject.put(KEY_CHAT_LAST_MESSAGE, lastMessageInChat.get(KEY_MESSAGE_TEXT));

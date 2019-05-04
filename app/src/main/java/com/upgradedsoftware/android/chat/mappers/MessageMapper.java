@@ -1,6 +1,7 @@
 package com.upgradedsoftware.android.chat.mappers;
 
 import com.upgradedsoftware.android.chat.models.ChatUiModel;
+import com.upgradedsoftware.android.chat.models.MessageStatus;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +29,8 @@ public class MessageMapper {
                     jsonElement.getString(KEY_MESSAGE_ID),
                     jsonElement.getBoolean(KEY_MESSAGE_FROM_ME),
                     jsonElement.getString(KEY_MESSAGE_TEXT),
-                    jsonElement.getLong(KEY_MESSAGE_CREATED));
+                    jsonElement.getLong(KEY_MESSAGE_CREATED),
+                    MessageStatus.MESSAGE_OK);
             list.add(element);
         }
 

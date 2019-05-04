@@ -10,10 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DataHolderApp {
-    public HashMap<String, JSONObject> chatsMap;
-    private List<ContactUiModel> mContactUiModel;
-    public HashMap<String, List<ChatUiModel>> mChatUiMap = new HashMap<>();
-    public HashMap<String, List<ChatUiModel>> mCacheChatUiMap = new HashMap<>();
+    private static List<ContactUiModel> mContactUiModel;
+    private static HashMap<String, List<ChatUiModel>> mChatUiMap = new HashMap<>();
 
     private static final DataHolderApp ourInstance = new DataHolderApp();
 
@@ -36,17 +34,14 @@ public class DataHolderApp {
         mContactUiModel = data;
     }
 
-    public void saveCachedMessage(ChatUiModel chatUiModel, String id) {
-        if (mCacheChatUiMap.get(id) == null){
-            mCacheChatUiMap.put(id, new ArrayList<ChatUiModel>());
+    public List<ChatUiModel> getMessageList(String id) {
+        if(mChatUiMap.get(id) == null){
+            mChatUiMap.put(id, new ArrayList<ChatUiModel>());
         }
-        mCacheChatUiMap.get(id).add(chatUiModel);
+        return mChatUiMap.get(id);
     }
 
-    public List<ChatUiModel> getCachedData(String id) {
-        if(mCacheChatUiMap.get(id) == null){
-            mCacheChatUiMap.put(id, new ArrayList<ChatUiModel>());
-        }
-        return mCacheChatUiMap.get(id);
+    public void setMessageList(List<ChatUiModel> chatUiMap, String id) {
+        mChatUiMap.put(id, chatUiMap);
     }
 }

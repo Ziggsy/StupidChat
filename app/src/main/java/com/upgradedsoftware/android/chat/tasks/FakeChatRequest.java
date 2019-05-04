@@ -19,10 +19,10 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
     protected Void doInBackground(JSONObject... data) {
         try {
             for (int i = 0; i < 9999; i++) {
-                publishProgress(DataHolderServer.getInstance().mJSONObjectMessages);
+                publishProgress(DataHolderServer.getInstance().getMessagesFormChat(mActivity.get().getChatId()));
                 TimeUnit.SECONDS.sleep(5);
             }
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | JSONException e) {
             e.printStackTrace();
         }
         return null;
@@ -31,7 +31,11 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {
-        DataHolderServer.getInstance().mJSONObjectMessages = values[0];
+        try {
+            DataHolderServer.getInstance().saveMessages(mActivity.get().getChatId(),values[0]);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         onReceive(values[0]);
         super.onProgressUpdate(values);
     }
