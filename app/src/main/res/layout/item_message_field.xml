@@ -5,6 +5,7 @@
     android:layout_height="40dp"
     android:padding="4dp"
     android:paddingTop="4dp"
+    android:background="@color/colorPrimary"
     android:paddingBottom="4dp">
 
     <EditText

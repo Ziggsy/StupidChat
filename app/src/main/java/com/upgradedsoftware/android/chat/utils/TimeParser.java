@@ -13,7 +13,7 @@ public class TimeParser {
     private static final long MOSCOW_GMT = 3L * 60L * 60L;
 
     public static long getCurrentTime() {
-        return System.currentTimeMillis() / 1000L + MOSCOW_GMT;
+        return System.currentTimeMillis() / 1000L;
     }
 
     public static String timeParser(long date) {

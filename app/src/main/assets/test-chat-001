@@ -47,12 +47,6 @@
       "from_me": false,
       "text": "OK. Let's go",
       "created": 1555700896
-    },
-    {
-      "id": "test-message-009",
-      "from_me": false,
-      "text": "Wanna call a Tesla taxi later? LOL",
-      "created": 1555700996
     }
   ]
 }

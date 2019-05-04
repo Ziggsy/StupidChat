@@ -24,7 +24,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
         try {
             for (int i = 0; i < 9999; i++) {
                 publishProgress(DataHolderServer.getInstance().getMessagesFormChat(mActivity.get().getChatId()));
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(5);
             }
         } catch (InterruptedException e) {
             Log.e(ERROR_TAG_INTERRUPTED_EXCEPTION,e.getMessage());
@@ -32,7 +32,6 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
         }
         return null;
     }
-
 
     @Override
     protected void onProgressUpdate(JSONObject... values) {

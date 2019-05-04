@@ -29,7 +29,7 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Voi
     @Override
     protected Void doInBackground(MessageRequestModel... data) {
         try {
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(5);
             saveToServerBD(data);
         } catch (JSONException e) {
             Log.e(ERROR_TAG_JSON_EXCEPTION,e.getMessage());
@@ -37,6 +37,7 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Voi
             Log.e(ERROR_TAG_INTERRUPTED_EXCEPTION,ex.getMessage());
             Thread.currentThread().interrupt();
         }
+        return null;
     }
 
     private void saveToServerBD(MessageRequestModel[] data) throws JSONException {

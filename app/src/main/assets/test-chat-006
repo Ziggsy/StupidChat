@@ -2,57 +2,27 @@
   "messages": [
     {
       "id": "test-message-001",
-      "from_me": true,
-      "text": "Hi there",
-      "created": 1555700196
+      "from_me": false,
+      "text": "YOU",
+      "created": 1497603600
     },
     {
       "id": "test-message-002",
       "from_me": false,
-      "text": "Hey, what's up?",
-      "created": 1555700296
+      "text": "ARE",
+      "created": 1497603610
     },
     {
       "id": "test-message-003",
-      "from_me": true,
-      "text": "Wanna grab some beer?",
-      "created": 1555700396
+      "from_me": false,
+      "text": "NOT",
+      "created": 1497603620
     },
     {
       "id": "test-message-004",
       "from_me": false,
-      "text": "Yeah",
-      "created": 1555700496
-    },
-    {
-      "id": "test-message-005",
-      "from_me": false,
-      "text": "Where?",
-      "created": 1555700596
-    },
-    {
-      "id": "test-message-006",
-      "from_me": true,
-      "text": "New Arbat Ave, 2, Moscow, one good place here",
-      "created": 1555700696
-    },
-    {
-      "id": "test-message-007",
-      "from_me": true,
-      "text": "23:00 is ok?",
-      "created": 1555700796
-    },
-    {
-      "id": "test-message-008",
-      "from_me": false,
-      "text": "OK. Let's go",
-      "created": 1555700896
-    },
-    {
-      "id": "test-message-009",
-      "from_me": false,
-      "text": "Wanna call a taxi later?",
-      "created": 1555700996
+      "text": "PREPARED",
+      "created": 1497603630
     }
   ]
 }

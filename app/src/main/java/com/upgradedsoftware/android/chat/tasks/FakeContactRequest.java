@@ -23,6 +23,8 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_CHATS;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_LAST_MESSAGE;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UNREAD;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_UPDATED;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
@@ -35,7 +37,7 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
     protected Void doInBackground(Void... voids) {
         try {
             for (DataHolderServer.getInstance().getCounter(); DataHolderServer.getInstance().getCounter() < 100; DataHolderServer.getInstance().setCounter()) {
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(5);
                 JSONObject contactData = getContactData();
                 JSONObject newData = randomEvent(contactData, DataHolderServer.getInstance().getCounter());
                 newData = setUnreadStatusAndLastMessage(newData);
@@ -116,6 +118,7 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
             // Будем считать, если последнее сообщение не от нас, то оно не прочитано
             chatObject.put(KEY_CHAT_UNREAD, !lastMessageInChat.get(KEY_MESSAGE_FROM_ME).equals(true));
             chatObject.put(KEY_CHAT_LAST_MESSAGE, lastMessageInChat.get(KEY_MESSAGE_TEXT));
+            chatObject.put(KEY_CHAT_UPDATED, lastMessageInChat.getLong(KEY_MESSAGE_CREATED));
             newChatsArray.put(chatObject);
         }
         return new JSONObject().put(KEY_CHAT_CHATS, newChatsArray);

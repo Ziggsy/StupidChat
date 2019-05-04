@@ -2,9 +2,9 @@
   "chats": [
     {
       "id": "test-chat-001",
-      "updated": 1556022893,
-      "created": 1555286500,
-      "unread": true,
+      "updated": 1555700896,
+      "created": 1555700196,
+      "unread": false,
       "last_message": "",
       "with_user": {
         "id": "test-user-001",
@@ -19,8 +19,8 @@
     },
     {
       "id": "test-chat-002",
-      "updated": 1555738493,
-      "created": 1555736493,
+      "updated": 1555700396,
+      "created": 1481619600,
       "unread": false,
       "last_message": "",
       "with_user": {
@@ -36,8 +36,8 @@
     },
     {
       "id": "test-chat-003",
-      "updated": 1555850093,
-      "created": 1555286700,
+      "updated": 1536138000,
+      "created": 1536138000,
       "unread": true,
       "last_message": "",
       "with_user": {
@@ -53,9 +53,9 @@
     },
     {
       "id": "test-chat-004",
-      "updated": 1555763693,
-      "created": 1555285500,
-      "unread": false,
+      "updated": 1555714999,
+      "created": 1555714140,
+      "unread": true,
       "last_message": "",
       "with_user": {
         "id": "test-chat-004",
@@ -70,18 +70,18 @@
     },
     {
       "id": "test-chat-005",
-      "updated": 1524227693,
-      "created": 1555288600,
-      "unread": false,
+      "updated": 1000000001,
+      "created": 1000000002,
+      "unread": true,
       "last_message": "",
       "with_user": {
         "id": "test-user-005",
-        "name": "Bob Ross",
+        "name": "Don Vito Corleone",
         "settings": {
-          "work": "Painter, art instructor, and television host"
+          "work": "The Godfather"
         },
         "avatar": {
-          "url": "https://yt3.ggpht.com/a-/AAuE7mC75lyDOGkH_0L4_ZR6F4bfGviFjsMZIGa22w=s900-mo-c-c0xffffffff-rj-k-no"
+          "url": "https://scrapsfromtheloft.com/wp-content/uploads/2017/09/The-Godfather-1972-Marlon-Brando-as-Don-Vito-Corleone.jpg"
         }
       }
     },
@@ -93,12 +93,12 @@
       "last_message": "",
       "with_user": {
         "id": "test-user-006",
-        "name": "Nikola Tesla",
+        "name": "Illidan Stormrage",
         "settings": {
-          "work": "Genius"
+          "work": "Demon Hunter"
         },
         "avatar": {
-          "url": "https://www.biography.com/.image/t_share/MTQ4NDI1NTU4NzM1MjAxNDgz/nikola_tesla_napoleon-sarony-public-domain-via-wikimedia-commons.jpg"
+          "url": "https://i0.wp.com/john.do/wp-content/uploads/2017/08/legion-twin-blades-azzinoth.png?w=1600&ssl=1"
         }
       }
     }

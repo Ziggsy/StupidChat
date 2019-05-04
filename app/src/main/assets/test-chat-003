@@ -2,9 +2,9 @@
   "messages": [
     {
       "id": "test-message-001",
-      "from_me": true,
-      "text": "3333333333333",
-      "created": 1555700196
+      "from_me": false,
+      "text": "We will launch Android Academy in Moscow, follow the news",
+      "created": 1536138000
     }
   ]
 }
