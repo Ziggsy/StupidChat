@@ -13,7 +13,7 @@ public class TimeParser {
     private static final long MOSCOW_GMT = 3L * 60L * 60L;
 
     public static long getCurrentTime() {
-        return System.currentTimeMillis() / 1000L;
+        return System.currentTimeMillis() / 1000L + MOSCOW_GMT;
     }
 
     public static String timeParser(long date) {
@@ -26,7 +26,6 @@ public class TimeParser {
         DATE_FORMAT = new SimpleDateFormat("dd.MM.yy", Locale.getDefault());
 
         long currentTime = System.currentTimeMillis() / 1000L + MOSCOW_GMT;
-        date = date + MOSCOW_GMT;
 
         if (date == 0) {
             return "-";

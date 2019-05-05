@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.upgradedsoftware.android.chat.R;
-import com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity;
 import com.upgradedsoftware.android.chat.adapters.ChatAdapter;
 import com.upgradedsoftware.android.chat.data.DataHolderApp;
 import com.upgradedsoftware.android.chat.data.DataHolderServer;
@@ -116,7 +115,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         this.recyclerView.smoothScrollToPosition(adapter.getItemCount());
     }
 
-    @SuppressLint("ClickableViewAccessibility") // sorry visually impaired people :<
+    @SuppressLint("ClickableViewAccessibility")
     private void initClickListener() {
         ImageView imageArrow = findViewById(R.id.arrowBack);
         ImageView imageSendMessage = findViewById(R.id.sendButton);
