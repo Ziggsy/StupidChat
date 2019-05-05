@@ -28,6 +28,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_CREATED
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
+import static com.upgradedsoftware.android.chat.utils.Helper.SERVER_FAKE_LATENCY;
 
 public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
 
@@ -37,7 +38,7 @@ public class FakeContactRequest extends AsyncTask<Void, JSONObject, Void> {
     protected Void doInBackground(Void... voids) {
         try {
             for (DataHolderServer.getInstance().getCounter(); DataHolderServer.getInstance().getCounter() < 100; DataHolderServer.getInstance().setCounter()) {
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(SERVER_FAKE_LATENCY);
                 JSONObject contactData = getContactData();
                 JSONObject newData = randomEvent(contactData, DataHolderServer.getInstance().getCounter());
                 newData = setUnreadStatusAndLastMessage(newData);

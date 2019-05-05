@@ -24,6 +24,8 @@ public class Helper {
 
     public static final String URL_MY_AVATAR = "https://pp.userapi.com/c852224/v852224410/fbe3b/3B4yGYVmwuM.jpg";
 
+    public static final int SERVER_FAKE_LATENCY = 1;
+
     public static final String BOTTOM_SHEET_TAG = "bottom_sheet_tag";
 
     public static final String JSON_SERVER_RESPONSE = "ServerResponse.json";

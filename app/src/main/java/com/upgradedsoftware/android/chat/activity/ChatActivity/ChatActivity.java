@@ -34,6 +34,10 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.UUID;
 
+import static com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity.BUNDLE_CHAT_ID;
+import static com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity.BUNDLE_NAME;
+import static com.upgradedsoftware.android.chat.activity.ContactListActivity.ContactListActivity.BUNDLE_URL;
+
 interface ChatActivityInterface {
     String getChatId();
     void newDataReceived(JSONObject object) throws JSONException;
@@ -67,8 +71,8 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         initDataAndUI();
         initFakeRequests();
         initRecycler();
@@ -86,10 +90,10 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             TextView view = findViewById(R.id.userName);
-            view.setText(bundle.getString(ContactListActivity.Key.BUNDLE_NAME));
+            view.setText(bundle.getString(BUNDLE_NAME));
             ImageView imageView = findViewById(R.id.userAvatar);
-            Helper.getInstance().imageLoader(imageView, bundle.getString(ContactListActivity.Key.BUNDLE_URL));
-            mChatId = bundle.getString(ContactListActivity.Key.BUNDLE_CHAT_ID);
+            Helper.getInstance().imageLoader(imageView, bundle.getString(BUNDLE_URL));
+            mChatId = bundle.getString(BUNDLE_CHAT_ID);
         }
     }
 
@@ -136,7 +140,7 @@ public class ChatActivity extends AppCompatActivity implements ChatActivityInter
                         true,
                         messageRequestModel.getTextMessage(),
                         messageRequestModel.getCreated(),
-                        MessageStatus.MESSAGE_CACHED
+                        MessageStatus.MESSAGE_SENDED
                 )
         );
         adapter.setNewData(DataHolderApp.getInstance().getMessageList(mChatId));

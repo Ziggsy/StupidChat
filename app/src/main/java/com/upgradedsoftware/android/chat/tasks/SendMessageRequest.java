@@ -21,6 +21,7 @@ import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_FROM_ME
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_ID;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_MESSAGES;
 import static com.upgradedsoftware.android.chat.utils.Helper.KEY_MESSAGE_TEXT;
+import static com.upgradedsoftware.android.chat.utils.Helper.SERVER_FAKE_LATENCY;
 
 public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Void> {
 
@@ -29,7 +30,7 @@ public class SendMessageRequest extends AsyncTask<MessageRequestModel, Void, Voi
     @Override
     protected Void doInBackground(MessageRequestModel... data) {
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(SERVER_FAKE_LATENCY);
             saveToServerBD(data);
         } catch (JSONException e) {
             Log.e(ERROR_TAG_JSON_EXCEPTION,e.getMessage());

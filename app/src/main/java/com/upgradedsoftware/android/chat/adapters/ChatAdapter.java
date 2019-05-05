@@ -37,8 +37,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         // Если кэш пуст, идём сразу к DiffUtil <3
         if (!cacheData.isEmpty()) {
 
-            // Находим элемент, который прокэширован локально, но имеет статус MESSAGE_OK
-            // Если таковой имеется, то удаляем его из локального кэша и ставим ему статус MESSAGE_CACHED_SAVED
+            // Находим элемент, который прокэширован локально, но не имеет статуса MESSAGE_DELIVERED
+            // Если таковой имеется, то удаляем его из локального кэша и ставим ему статус MESSAGE_SAVED_ON_SERVER
             // Для того, чтобы заюзать UI эффекты
 
             for (int i = 0; i < data.size(); i++) {
@@ -47,7 +47,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             data.get(i).getMessageStatus() != (cacheData.get(j).getMessageStatus()) &&
                             data.get(i).getMessageID().equals(cacheData.get(j).getMessageID())) {
                         cacheData.remove(j);
-                        temp.get(i).setMessageStatus(MessageStatus.MESSAGE_CACHED_SAVED);
+                        temp.get(i).setMessageStatus(MessageStatus.MESSAGE_SAVED_ON_SERVER);
                         break;
                     }
                 }
@@ -147,10 +147,10 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             time.setText(TimeParser.parseInDay(item.getCreated()));
 
             switch (item.getMessageStatus()) {
-                case MessageStatus.MESSAGE_CACHED:
+                case MessageStatus.MESSAGE_SENDED:
                     setMessageCachedUI();
                     break;
-                case MessageStatus.MESSAGE_CACHED_SAVED:
+                case MessageStatus.MESSAGE_SAVED_ON_SERVER:
                     setMessageCachedSavedUI();
                     break;
                 default:

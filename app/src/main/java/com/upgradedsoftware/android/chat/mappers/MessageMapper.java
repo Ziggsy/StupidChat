@@ -34,7 +34,7 @@ public class MessageMapper {
                     jsonElement.getBoolean(KEY_MESSAGE_FROM_ME),
                     jsonElement.getString(KEY_MESSAGE_TEXT),
                     jsonElement.getLong(KEY_MESSAGE_CREATED),
-                    MessageStatus.MESSAGE_OK);
+                    MessageStatus.MESSAGE_DELIVERED);
             list.add(element);
         }
 

@@ -20,6 +20,10 @@ import com.upgradedsoftware.android.chat.R;
 
 import java.util.Objects;
 
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_AVATAR_URL;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_CHAT_ID;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_NAME;
+import static com.upgradedsoftware.android.chat.utils.Helper.KEY_USER_SETTINGS;
 import static com.upgradedsoftware.android.chat.utils.Helper.URL_MY_AVATAR;
 
 
@@ -49,6 +53,7 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        restoreData(savedInstanceState);
         Objects.requireNonNull(getDialog().getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         return inflater.inflate(R.layout.bottom_sheet_layout, container, false);
     }
@@ -93,6 +98,15 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         }
     }
 
+    private void restoreData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            url = savedInstanceState.getString(KEY_AVATAR_URL, "");
+            userName = savedInstanceState.getString(KEY_USER_NAME, "");
+            userInfo = savedInstanceState.getString(KEY_USER_SETTINGS, "");
+            id = savedInstanceState.getString(KEY_CHAT_ID, "");
+        }
+    }
+
     private void loadUser() {
         TextView text = getView().findViewById(R.id.myFirstAndLast);
         text.setText(userName);
@@ -102,4 +116,12 @@ public class BottomSheetDialog extends BottomSheetDialogFragment {
         Helper.getInstance().imageLoader(viewAvatar, url);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString(KEY_AVATAR_URL, url);
+        outState.putString(KEY_USER_NAME, userName);
+        outState.putString(KEY_USER_SETTINGS, userInfo);
+        outState.putString(KEY_CHAT_ID, id);
+        super.onSaveInstanceState(outState);
+    }
 }

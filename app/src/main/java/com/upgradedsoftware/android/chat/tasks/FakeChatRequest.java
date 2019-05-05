@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_INTERRUPTED_EXCEPTION;
 import static com.upgradedsoftware.android.chat.utils.Helper.ERROR_TAG_JSON_EXCEPTION;
+import static com.upgradedsoftware.android.chat.utils.Helper.SERVER_FAKE_LATENCY;
 
 public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
 
@@ -24,7 +25,7 @@ public class FakeChatRequest extends AsyncTask<JSONObject, JSONObject, Void> {
         try {
             for (int i = 0; i < 9999; i++) {
                 publishProgress(DataHolderServer.getInstance().getMessagesFormChat(mActivity.get().getChatId()));
-                TimeUnit.SECONDS.sleep(5);
+                TimeUnit.SECONDS.sleep(SERVER_FAKE_LATENCY);
             }
         } catch (InterruptedException e) {
             Log.e(ERROR_TAG_INTERRUPTED_EXCEPTION,e.getMessage());

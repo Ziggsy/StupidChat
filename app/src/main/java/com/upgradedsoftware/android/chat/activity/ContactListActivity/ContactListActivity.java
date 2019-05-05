@@ -39,14 +39,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
 
     private static final int ACTIVITY_LAYOUT = R.layout.activity_main;
 
-    public static class Key {
-        private Key() {
-        }
-
-        public static final String BUNDLE_NAME = "bundle.name";
-        public static final String BUNDLE_URL = "bundle.url";
-        public static final String BUNDLE_CHAT_ID = "bundle.chat.id";
-    }
+    public static final String BUNDLE_NAME = "bundle.name";
+    public static final String BUNDLE_URL = "bundle.url";
+    public static final String BUNDLE_CHAT_ID = "bundle.chat.id";
 
     private ContactsAdapter adapter;
     private RecyclerView mRecyclerView;
@@ -70,8 +65,8 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         initFakeServer();
         initBottomSheet();
         initMyAvatar();
@@ -146,9 +141,9 @@ public class ContactListActivity extends AppCompatActivity implements ContactLis
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(ContactListActivity.this, ChatActivity.class);
-                intent.putExtra(Key.BUNDLE_URL, adapter.getData().get(position).getUser().getUserAvatars().getUrl());
-                intent.putExtra(Key.BUNDLE_CHAT_ID, adapter.getData().get(position).getChatId());
-                intent.putExtra(Key.BUNDLE_NAME, adapter.getData().get(position).getUser().getName());
+                intent.putExtra(BUNDLE_URL, adapter.getData().get(position).getUser().getUserAvatars().getUrl());
+                intent.putExtra(BUNDLE_CHAT_ID, adapter.getData().get(position).getChatId());
+                intent.putExtra(BUNDLE_NAME, adapter.getData().get(position).getUser().getName());
                 ContactListActivity.this.startActivity(intent);
             }
         };
